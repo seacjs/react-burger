@@ -1,0 +1,15 @@
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header > * {
+    width: calc(100% / 3);
+}
+.header *:nth-child(1) {
+    text-align: left;
+}
+.header *:nth-child(3) {
+    text-align: right;
+}
