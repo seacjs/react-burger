@@ -1,49 +1,8 @@
 import React from "react";
 import {ConstructorElement, DragIcon, Button, CurrencyIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
-import image from '../../images/bun-02.png';
 import {data} from '../../utils/data';
 
 export default class BurgerConstructor  extends React.Component {
-
-  state = {
-    wrapCnstructorElement: {
-      name: 'Краторная булка N-200i (низ)',
-      price: 20,
-      img: image
-    },
-    constructorElements: [
-      {
-        name: 'Краторная булка N-200i (низ)',
-        price: 20,
-        img: image
-      },
-      {
-        name: 'Краторная булка N-200i (низ)',
-        price: 20,
-        img: image
-      },
-      {
-        name: 'Краторная булка N-200i (низ)',
-        price: 20,
-        img: image
-      },
-      {
-          name: 'Краторная булка N-200i (низ)',
-          price: 20,
-          img: image
-      },
-      {
-        name: 'Краторная булка N-200i (низ)',
-        price: 20,
-        img: image
-      },
-      {
-        name: 'Краторная булка N-200i (низ)',
-        price: 20,
-        img: image
-      }
-    ]
-  }
 
   render(): React.ReactNode {
     return (
