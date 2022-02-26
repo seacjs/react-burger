@@ -1,0 +1,26 @@
+.wrap {
+    padding-left: 32px;
+}
+.wrapTop,
+.wrapBottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-left: 24px;
+}
+.wrapMiddle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    overflow-y: scroll;
+    height: 650px;
+}
+.priceBlock {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 40px;
+}

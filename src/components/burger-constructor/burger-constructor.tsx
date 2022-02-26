@@ -1,54 +1,48 @@
 import React from "react";
 import {ConstructorElement, DragIcon, Button, CurrencyIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
 import {data} from '../../utils/data';
+import styles from './burger-constructor.module.css';
 
 export default class BurgerConstructor  extends React.Component {
 
   render(): React.ReactNode {
     return (
       <React.Fragment>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
-          <div className="wrap ml-4">
-            <span style={{width: '32px', display: 'inline-block'}}></span>
+        <div className={styles.wrap + ' ' +styles.wrapTop}>
             <ConstructorElement
               type="top"
               isLocked={true}
-              text={data[0].name}
+              text={data[0].name + ' (верх)'}
               price={data[0].price}
               thumbnail={data[0].image}
             />
-          </div>
         </div>
-        <div className="mt-4 mb-4" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px', overflowY: 'scroll', height: '650px' }}>
+        <div className={styles.wrapMiddle+ " mt-4 mb-4"} >
           {
             data.filter(item => item.type !== 'bun').map(cnstructorElement => {
-              return <div className="wrap ml-4">
-                <span style={{width: '32px', display: 'inline-block'}}>
+              return (
+                <div key={cnstructorElement._id}>
                   <DragIcon type="primary" />
-                </span>
-                <ConstructorElement
-                  text={cnstructorElement.name}
-                  price={cnstructorElement.price}
-                  thumbnail={cnstructorElement.image}
-                />
-              </div>
-
+                  <ConstructorElement
+                    text={cnstructorElement.name}
+                    price={cnstructorElement.price}
+                    thumbnail={cnstructorElement.image}
+                  />
+                </div>
+              )
             })
           }
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
-          <div className="wrap ml-4">
-            <span style={{width: '32px', display: 'inline-block'}}></span>
+        <div className={styles.wrap + ' ' +styles.wrapBottom}>
             <ConstructorElement
               type="bottom"
               isLocked={true}
-              text={data[0].name}
+              text={data[0].name + ' (низ)'}
               price={data[0].price}
               thumbnail={data[0].image}
             />
-          </div>
         </div>
-        <div className="mt-10" style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: '40px'}}>
+        <div className={styles.priceBlock + ' mt-10'}>
           <div className="text text_type_digits-medium">
             <span>610</span>
             <CurrencyIcon type="primary" />
