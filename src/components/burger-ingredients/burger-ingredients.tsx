@@ -3,6 +3,7 @@ import {Tab}  from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientElement from './ingredient-element/ingredient-element';
 import styles from './burger-ingrediends.module.css';
 import PropTypes from 'prop-types';
+import ingredientItemPropTypes from '../../utils/ingredient-item-prop-types';
 
 function BurgerIngredients(props: any) {
 
@@ -74,7 +75,7 @@ function BurgerIngredients(props: any) {
 }
 
 BurgerIngredients.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object)
+  data: PropTypes.arrayOf(ingredientItemPropTypes)
 }
 
 export default BurgerIngredients;

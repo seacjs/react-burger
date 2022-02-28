@@ -11,7 +11,7 @@ function ModalOverlay(props: any) {
   }, [props.isOpen])
 
   const isEscape = (event: any) => {
-    if(isOpen && event.keyCode === 27) {
+    if(isOpen && event.keyCode === 'Escape') {
       close();
     }
   }

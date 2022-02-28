@@ -4,6 +4,7 @@ import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from './../order-details/order-details';
 import PropTypes from 'prop-types';
+import ingredientItemPropTypes from '../../utils/ingredient-item-prop-types';
 
 function BurgerConstructor(props: any){
 
@@ -81,7 +82,7 @@ function BurgerConstructor(props: any){
 }
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object)
+  data: PropTypes.arrayOf(ingredientItemPropTypes)
 }
 
 export default BurgerConstructor
