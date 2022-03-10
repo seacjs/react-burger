@@ -1,0 +1,21 @@
+.button {
+    background: none;
+    border: none;
+    color: var(--text-inactive-color);
+}
+.button svg {
+    fill: var(--text-inactive-color);
+}
+.active,
+.button:hover {
+    cursor: pointer;
+    color: var( --text-primary-color)
+}
+.active svg,
+.button:hover svg {
+    fill: var( --text-primary-color)
+} 
+.button * {
+    display: inline-block;
+    vertical-align: middle;
+}

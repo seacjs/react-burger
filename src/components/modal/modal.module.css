@@ -1,0 +1,25 @@
+.modal {
+  z-index: 1001;
+  position: fixed; 
+  margin: auto;
+  width: 720px;
+  height: auto;
+  left: calc((100vw - 720px) / 2);
+  top: 230px;
+  display: none;
+  background: rgba(28, 28, 33, 1);
+  border-radius: 40px;
+  padding: 40px;
+}
+svg {
+  cursor: pointer;
+}
+.modalHeader {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+}
+.isOpen {
+  display: block;
+}

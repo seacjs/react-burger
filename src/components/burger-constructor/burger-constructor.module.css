@@ -1,0 +1,35 @@
+.wrap {
+    padding-left: 32px;
+}
+.wrapTop,
+.wrapBottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-left: 24px;
+}
+.wrapMiddle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    overflow-y: auto;
+    height: calc(100vh - 580px);
+    max-height: 650px;
+}
+.wrapMiddleInner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    height: auto;
+    min-height: 350px;
+}
+.priceBlock {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 40px;
+}

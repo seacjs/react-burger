@@ -1,0 +1,12 @@
+.tabs {
+    display: flex;
+    justify-content: space-between;
+}
+.ingridientsContainer {
+    overflow-y: auto;
+    height: calc(100vh - 244px);
+}
+.ingridientElementWrap {
+    display: flex;
+    flex-wrap: wrap;
+}
