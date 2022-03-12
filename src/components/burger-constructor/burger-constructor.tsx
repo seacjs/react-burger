@@ -1,44 +1,116 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import {ConstructorElement, DragIcon, Button, CurrencyIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from './../order-details/order-details';
 import PropTypes from 'prop-types';
 import ingredientItemPropTypes from '../../utils/ingredient-item-prop-types';
+import IngridientsDataContext from "../services/IngridientsDataContext";
+import { Ingredient } from "../model/ingredient";
+import { cartData } from "../services/cartContext";
+import ConstructorDataContext from "../services/constructorDataContext";
+
+const sentOrderUrl = 'https://norma.nomoreparties.space/api/orders';
 
 function BurgerConstructor(props: any){
 
-  const [data, setData] = useState([] as any[]);
+  const ingredientData = useContext(IngridientsDataContext) as Ingredient[];
   const [orderOpen, setOrderOpen] = useState(false);
 
-  useEffect(() => {
-    setData(props.data);
-  }, [props.data, orderOpen])
+  const [orderData, setOrderData] = useState(null);
+  const [cartState, dispatchCart] = useContext(ConstructorDataContext);
 
+  // Открыть окно заказа
   const openOrder = () => {
-    setOrderOpen(true);
+    let ingredients: any[] = [];
+    cartState.items.forEach((item: Ingredient) => {
+      ingredients.push(item._id);
+    });
+    
+    const options = {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json'
+     },
+      body: JSON.stringify({"ingredients": ingredients})
+    };
+
+    // todo: добавить http класс для отправки и обработки запросов
+    fetch(sentOrderUrl, options as any)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('ошибка ' + res.status);
+        }
+        return res.json();
+      })
+      .then((json: any) =>   {
+        if (!json.success) {
+          throw new Error('ошибка');
+        }
+        console.log('json', json);
+        setOrderData({
+          name: json.name,
+          number: json.order.number
+        } as any)
+        setOrderOpen(true);
+      })
+      .catch((error) => {
+        console.error('Что то пошло не так... :(', error);
+      })
+
   }
   const closeOrder = () => {
     setOrderOpen(false);
   }
 
+  const initCart = (ingredients: Ingredient[]): void => {
+    let oneBunFinded = false;
+    ingredients = ingredients.filter(item => {
+      if (item.type !== 'bun' || !oneBunFinded) {
+        if (item.type === 'bun') {
+          oneBunFinded = true;
+        }
+        return true;
+      }
+      return false;
+    });
+    dispatchCart(ingredients);
+  }
+  const clearCart = (): void => {
+    dispatchCart([]);
+  }
+  const addItemToCart = (ingredient: Ingredient): void => {
+    // todo: проверить что бы булка была только одна
+    const items = [...cartState.items];
+    items.push(ingredient);
+    dispatchCart(items);
+  }
+  const removeItemFromCart = (itemPosition: number): void => {
+    const items = [...cartState.items];
+    items.splice(itemPosition, 1);
+    dispatchCart(items);
+  }
+
+  useEffect(() => {
+    initCart(ingredientData);
+  }, [ingredientData]);
 
   return (
     <React.Fragment>
-      { data.length > 0 ?
+      { ingredientData.length > 0 ?
       <div className={styles.wrapMiddleInner}>
         <div className={styles.wrap + ' ' +styles.wrapTop}>
             <ConstructorElement
               type="top"
               isLocked={true}
-              text={data[0].name + ' (верх)'}
-              price={data[0].price}
-              thumbnail={data[0].image}
+              text={ingredientData[0].name + ' (верх)'}
+              price={ingredientData[0].price}
+              thumbnail={ingredientData[0].image}
             />
         </div>
         <div className={styles.wrapMiddle+ " mt-4 mb-4"} >
           {
-            data.filter((item: any)=> item.type !== 'bun').map((cnstructorElement:any )=> {
+            ingredientData.filter((item: any)=> item.type !== 'bun').map((cnstructorElement:any )=> {
               return (
                 <div key={cnstructorElement._id}>
                   <DragIcon type="primary" />
@@ -56,9 +128,9 @@ function BurgerConstructor(props: any){
             <ConstructorElement
               type="bottom"
               isLocked={true}
-              text={data[0].name + ' (низ)'}
-              price={data[0].price}
-              thumbnail={data[0].image}
+              text={ingredientData[0].name + ' (низ)'}
+              price={ingredientData[0].price}
+              thumbnail={ingredientData[0].image}
             />
         </div>
       </div>
@@ -66,7 +138,7 @@ function BurgerConstructor(props: any){
 
       <div className={styles.priceBlock + ' mt-10'}>
         <div className="text text_type_digits-medium">
-          <span>610</span>
+          <span>{cartState.totalPrice}</span>
           <CurrencyIcon type="primary" />
         </div>
         <div>
@@ -75,7 +147,7 @@ function BurgerConstructor(props: any){
       </div>
 
       <Modal isOpen={orderOpen} title={''} onClose={closeOrder}>
-        <OrderDetails />
+        <OrderDetails order={orderData} />
       </Modal>
     </React.Fragment>
   )
