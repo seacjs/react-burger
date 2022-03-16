@@ -1,18 +1,18 @@
-const urlIngredients = 'https://norma.nomoreparties.space/api/ingredients';
-const urlCreateOrder = 'https://norma.nomoreparties.space/api/orders';
+const baseUrl = 'https://norma.nomoreparties.space/api';
+
+const checkResponse = (response: Response) => {
+  if (!response.ok) {
+      throw new Error('ошибка ' + response.status);
+  }
+  return response.json();
+}
 
 export const getIngredientsRequest = () => {
-  return fetch(urlIngredients)
-    .then(res => {
-      if (!res.ok) {
-          throw new Error('ошибка ' + res.status);
-      }
-      return res.json();
-    });
+  return fetch(`${baseUrl}/ingredients`)
+    .then(checkResponse);
 };
 
 export const getCreateOrderRequest = (ids: string[]) => {
-
   const options = {
     method: 'POST',
     headers: {
@@ -21,13 +21,8 @@ export const getCreateOrderRequest = (ids: string[]) => {
     body: JSON.stringify({"ingredients": ids})
   };
 
-  return fetch(urlCreateOrder, options)
-    .then(res => {
-      if (!res.ok) {
-          throw new Error('ошибка ' + res.status);
-      }
-      return res.json();
-    });
+  return fetch(`${baseUrl}/orders`, options)
+    .then(checkResponse);
 };
 
   

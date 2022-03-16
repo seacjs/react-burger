@@ -28,6 +28,11 @@ export function getIngredinets() {
             type: GET_ITEMS_FAILED
           });
         }
-      });
+      }).catch(error => {
+        console.log('error', error);
+        dispatch({
+          type: GET_ITEMS_FAILED
+        });
+    })
     };
   }

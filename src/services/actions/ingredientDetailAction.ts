@@ -5,6 +5,7 @@ const CLOSE_DETAIL = 'CLOSE_DETAIL';
 
 const showIngredient = (ingredient: Ingredient) => {
     return {
+        type: OPEN_DETAIL,
         ingredient: ingredient,
         isOpen: true
     }

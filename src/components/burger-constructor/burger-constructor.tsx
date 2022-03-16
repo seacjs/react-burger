@@ -9,20 +9,22 @@ import { getCreateOrder, ORDER_CLOSE } from "../../services/actions/orderActions
 import { useDrop } from "react-dnd";
 import { addIngredient, moveIngredient, removeIngredient } from "../../services/actions/cartActions";
 import Card from "./card";
+import { v4 as uuidv4 } from 'uuid';
+import CartIngredient from "../../model/cartIngredient";
 
 function BurgerConstructor() {
 
   const cartData = useSelector((store: any) => store.cart);
   const order = useSelector((store: any) => store.order);
   const ingredientData = cartData.items;
-  const bunIngredient = ingredientData.find((item: Ingredient) => item.type === 'bun');
-  const centerIngredinets = ingredientData.filter((item: Ingredient)=> item.type !== 'bun');
+  const bunIngredient = ingredientData.find((item: CartIngredient) => item.ingredient.type === 'bun')?.ingredient;
+  const centerIngredinets = ingredientData.filter((item: CartIngredient)=> item.ingredient.type !== 'bun');
 
   const dispatch = useDispatch();
   const openOrder = () => {
     let ingredientsIds: string[] = [];
-    cartData.items.forEach((item: Ingredient) => {
-      ingredientsIds.push(item._id);
+    cartData.items.forEach((item: CartIngredient) => {
+      ingredientsIds.push(item.ingredient._id);
     });
     dispatch(getCreateOrder(ingredientsIds));
   }
@@ -66,14 +68,14 @@ function BurgerConstructor() {
 
           <div className={styles.wrapMiddle+ " mt-4 mb-4"} >
             {
-              centerIngredinets.map((cnstructorElement: Ingredient, index: number)=> {
+              centerIngredinets.map((cnstructorElement: CartIngredient, index: number)=> {
                 return (
-                  <Card index={index} key={cnstructorElement._id + '_' + (+ new Date())} id={cnstructorElement._id + '_' + (+ new Date())} moveCard={moveItems}>
+                  <Card index={index} key={cnstructorElement.id} id={cnstructorElement.id} moveCard={moveItems}>
                     <DragIcon type="primary" />
                     <ConstructorElement
-                      text={cnstructorElement.name}
-                      price={cnstructorElement.price}
-                      thumbnail={cnstructorElement.image}
+                      text={cnstructorElement.ingredient.name}
+                      price={cnstructorElement.ingredient.price}
+                      thumbnail={cnstructorElement.ingredient.image}
                       handleClose={() => {removeItem(index)}}
                     />
                   </Card>
@@ -106,7 +108,7 @@ function BurgerConstructor() {
         </div>
       </div>
 
-      <Modal isOpen={order.isOpen} title={''} onClose={closeOrder}>
+      <Modal isOpen={order.isOpen} title={''} onClose={closeOrder} type={'order'}>
         <OrderDetails />
       </Modal>
     </React.Fragment>

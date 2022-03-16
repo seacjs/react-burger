@@ -39,6 +39,11 @@ export function getCreateOrder(ids: string[]) {
             type: CREATE_ORDER_FAILED
           });
         }
+      }).catch(error => {
+          console.log('error', error);
+          dispatch({
+            type: CREATE_ORDER_FAILED
+          });
       });
     };
   }

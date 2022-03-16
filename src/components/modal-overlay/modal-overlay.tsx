@@ -14,16 +14,7 @@ function ModalOverlay(props: propType) {
     setIsOpen(props.isOpen);
   }, [props.isOpen])
 
-  const isEscape = (event: any) => {
-    if(isOpen && event.keyCode === 'Escape') {
-      close();
-    }
-  }
-
-  document.addEventListener("keydown", isEscape, false);
-
   const close = () => {
-    document.removeEventListener("keydown", isEscape, false);
     props.onClose();
   }
   

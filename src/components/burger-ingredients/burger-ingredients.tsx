@@ -90,7 +90,7 @@ function BurgerIngredients() {
         {
           tabState.tabs.map((tab: string, index: number) => {
             return (
-              <Tab key={index} value={tabState.types[index]} active={tabState.currentTab === index} onClick={setCurrentTab}>
+              <Tab key={tabState.types[index]} value={tabState.types[index]} active={tabState.currentTab === index} onClick={setCurrentTab}>
                 {tab}
               </Tab>
             )
@@ -108,7 +108,7 @@ function BurgerIngredients() {
                   {
                     ingredientData.filter((item: Ingredient) => item.type === tabState.types[index]).map((ingridient: Ingredient, ingridientIndex: number) => {
                       return (
-                        <IngredientElement key={tabState.types[index]+ '_' + ingridient._id} 
+                        <IngredientElement key={ingridient._id} 
                           ingridient={ingridient}
                         />
                       )

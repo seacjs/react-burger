@@ -3,13 +3,20 @@
   position: fixed; 
   margin: auto;
   width: 720px;
-  height: auto;
+  height: 458px;
   left: calc((100vw - 720px) / 2);
-  top: 230px;
+  top: calc((100vh - 540px) / 2);
   display: none;
   background: rgba(28, 28, 33, 1);
   border-radius: 40px;
   padding: 40px;
+}
+.modalIngredient {
+  top: calc((100vh - 540px) / 2);
+}
+.modalOrder {
+  height: 560px;
+  top: calc((100vh - 640px) / 2);
 }
 svg {
   cursor: pointer;

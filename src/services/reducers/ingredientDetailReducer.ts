@@ -1,11 +1,14 @@
+import { Ingredient } from './../../model/ingredient';
 import { CLOSE_DETAIL, OPEN_DETAIL } from '../actions/ingredientDetailAction';
 
 interface initialStateDetail {
-  isOpen: boolean
+  isOpen: boolean,
+  ingredient: Ingredient | null
 }
 
 const initialState: initialStateDetail = {
-  isOpen: false
+  isOpen: false,
+  ingredient: null
 }
 
 const ingredientDetailReducer = (state: initialStateDetail = initialState, action: any): any => {
@@ -13,6 +16,7 @@ const ingredientDetailReducer = (state: initialStateDetail = initialState, actio
     case OPEN_DETAIL: {
       return {
         ...state,
+        ingredient: action.ingredient,
         isOpen: true
       }
     }

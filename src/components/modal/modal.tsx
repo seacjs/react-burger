@@ -10,22 +10,36 @@ interface propType {
   children: any,
   title: string,
   onClose: any,
-  isOpen: boolean
+  isOpen: boolean,
+  type: string
 }
 
 function Modal(props: propType) {
 
-  const {onClose, title, children} = props;
+  const {onClose, title, children, isOpen, type} = props;
 
-  const [isOpen, setIsOpen] = useState(props.isOpen);
+  const close = () => {
+    document.removeEventListener("keydown", isEscape, false);
+    props.onClose();
+  }
+
+  const isEscape = (event: any) => {
+    if(isOpen && event.keyCode === 27) {
+      close();
+    }
+  }
 
   useEffect(() => {
-    setIsOpen(props.isOpen);
-  }, [props.isOpen])
+    document.addEventListener("keydown", isEscape, false);
+    return () => {
+      document.removeEventListener("keydown", isEscape, false);
+    }
+  }, [isOpen === true]);
 
   return ReactDOM.createPortal (
     <>
-      <div className={styles.modal + ' ' + ( isOpen === true ? styles.isOpen : '')}>
+      {/* todo: refactor */}
+      <div className={styles.modal +' ' + (type ==='order' ? styles.modalOrder : styles.modalIngredient) + ' ' + ( isOpen === true ? styles.isOpen : '')}>
         <div className={styles.modalHeader + ' text text_type_main-large'}>
           <CloseIcon onClick={onClose} type="primary" />
           {title}

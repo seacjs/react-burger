@@ -4,7 +4,7 @@ import styles from './ingredient-element.module.css';
 import Modal from '../../modal/modal';
 import IngredientDetails from '../../ingredient-details/ingredient-details'
 import { useDispatch, useSelector } from "react-redux";
-import { CLOSE_DETAIL, OPEN_DETAIL } from "../../../services/actions/ingredientDetailAction";
+import { CLOSE_DETAIL, OPEN_DETAIL, showIngredient } from "../../../services/actions/ingredientDetailAction";
 import { useDrag } from "react-dnd";
 import { Ingredient } from "../../../model/ingredient";
 
@@ -12,10 +12,10 @@ interface propType  {
   ingridient: Ingredient
 }
 
-function IngredientElement(props: propType) {
+function IngredientElement(props: any) {
 
   const { image, price, name, calories, proteins, fat, carbohydrates} = props.ingridient;
-  const ingridient = props.ingridient as Ingredient;
+  const {ingridient} = props;
 
   const cart = useSelector((store: any) => store.cart);
 
@@ -23,7 +23,9 @@ function IngredientElement(props: propType) {
   const dispatch = useDispatch();
 
   const openDetail = () => {
-    dispatch({type: OPEN_DETAIL});
+    console.log('ingridient --- ',ingridient);
+    dispatch(showIngredient(ingridient));
+    
   }
   const closeDetail = () => {
     dispatch({type: CLOSE_DETAIL});
@@ -36,7 +38,6 @@ function IngredientElement(props: propType) {
         isDrag: monitor.isDragging()
     })
   });
-
 
 
   return (
@@ -58,15 +59,8 @@ function IngredientElement(props: propType) {
           </div>
         </div>
       }
-      <Modal isOpen={ingredientDetail.isOpen} title={name} onClose={closeDetail}>
-          <IngredientDetails
-            image={image}
-            name={name}
-            calories={calories}
-            proteins={proteins}
-            fat={fat}
-            carbohydrates={carbohydrates}
-          />
+      <Modal isOpen={ingredientDetail.isOpen} title={name} onClose={closeDetail} type={'ingredinet'}>
+          <IngredientDetails />
       </Modal>
     </React.Fragment>
   )
