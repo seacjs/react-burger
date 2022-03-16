@@ -1,31 +1,85 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import {Tab}  from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientElement from './ingredient-element/ingredient-element';
 import styles from './burger-ingrediends.module.css';
-import PropTypes from 'prop-types';
-import ingredientItemPropTypes from '../../utils/ingredient-item-prop-types';
-import IngredientsDataContext from '../services/IngridientsDataContext';
+import { useSelector } from "react-redux";
+import { Ingredient } from "../../model/ingredient";
 
+function BurgerIngredients() {
 
-function BurgerIngredients(props: any) {
+  const ingredientData = useSelector((store: any) => store.ingredients.items);
 
-  const ingredientData = useContext(IngredientsDataContext);
-
+  // TABS START
   const initialTabState = {
     tabs: ['Булки','Соусы','Начинки'],
     types: ['bun','sauce','main'],
     currentTab: 0,
   }
-  function reducer(state: any, action: any) {
+  function reducer(state: any, action: number) {
     return {
       ...state,
       currentTab: +action
     }
   }
   const [tabState, dispatch] = useReducer(reducer, initialTabState);
-  const setCurrentTab = ($event: string): any => {
-    dispatch($event);
+  const setCurrentTab = ($event: string): void => {
+    const index = tabState.types.findIndex((item: string) => item === $event);
+    dispatch(index);
   }
+  // TABS END 
+
+  const ingridientsContainerRef = useRef(null);
+
+  const bunSectionRef = useRef(null);
+  const sauceSectionRef = useRef(null);
+  const mainSectionRef = useRef(null);
+  
+  const tabRefs = [
+    bunSectionRef,
+    sauceSectionRef,
+    mainSectionRef
+  ];
+
+  const trackScroll = (e: any) => {
+    const  scrollTop = e.target.getBoundingClientRect().top;
+    if (
+      bunSectionRef && bunSectionRef.current &&
+      sauceSectionRef && sauceSectionRef.current &&
+      mainSectionRef && mainSectionRef.current 
+    ) {
+      const bunSectionVal = Math.abs((bunSectionRef.current as HTMLElement).getBoundingClientRect().top - scrollTop);
+      const sauceSectionVal = Math.abs((sauceSectionRef.current as HTMLElement).getBoundingClientRect().top - scrollTop);
+      const mainSectionVal = Math.abs((mainSectionRef.current as HTMLElement).getBoundingClientRect().top - scrollTop);
+
+      const minValue = Math.min(bunSectionVal, sauceSectionVal, mainSectionVal);
+      switch (minValue) {
+        case bunSectionVal: {
+          return setCurrentTab('bun');
+        }
+        case sauceSectionVal: {
+          return setCurrentTab('sauce');
+        }
+        case mainSectionVal: {
+          return setCurrentTab('main');
+        }
+        default:
+          return setCurrentTab('bun');
+      }
+
+    }
+  }
+  // todo: need refactor...
+
+  useEffect(() => {
+    if (ingridientsContainerRef && ingridientsContainerRef.current) {
+      (ingridientsContainerRef.current as HTMLElement).addEventListener('scroll', trackScroll);
+    }
+    return () => {
+      if (ingridientsContainerRef && ingridientsContainerRef.current) {
+        (ingridientsContainerRef.current as HTMLElement).removeEventListener("scroll", trackScroll);
+      }
+    }
+  },[]);
 
   return (
     <React.Fragment>
@@ -34,9 +88,9 @@ function BurgerIngredients(props: any) {
       {/* TABS */}
       <div className={styles.tabs}>
         {
-          tabState.tabs.map((tab: any, index: any) => {
+          tabState.tabs.map((tab: string, index: number) => {
             return (
-              <Tab key={index} value={index} active={tabState.currentTab === index} onClick={setCurrentTab}>
+              <Tab key={index} value={tabState.types[index]} active={tabState.currentTab === index} onClick={setCurrentTab}>
                 {tab}
               </Tab>
             )
@@ -44,24 +98,18 @@ function BurgerIngredients(props: any) {
         }
       </div>
       {/* INGRIDIENTS CONTAINER */}
-      <div className={styles.ingridientsContainer + ' mt-10'}>
+      <div className={styles.ingridientsContainer + ' mt-10'} ref={ingridientsContainerRef}>
         {
-          tabState.tabs.map((tab: any, index: any) => {
+          tabState.tabs.map((tab: string, index: number) => {
             return (
-              <React.Fragment key={index}>
-                <p className="align-left text text_type_main-medium">{tab}</p>
+              <React.Fragment key={tabState.types[index]}>
+                <p className="align-left text text_type_main-medium" ref={tabRefs[index]}>{tab}</p>
                 <div className={styles.ingridientElementWrap}>
                   {
-                    ingredientData.filter((item: any) => item.type === tabState.types[index]).map((ingridient: any, ingridientIndex: number) => {
+                    ingredientData.filter((item: Ingredient) => item.type === tabState.types[index]).map((ingridient: Ingredient, ingridientIndex: number) => {
                       return (
-                        <IngredientElement key={index+ '_' + ingridientIndex} 
-                          name={ingridient.name} 
-                          price={ingridient.price} 
-                          image={ingridient.image} 
-                          calories={ingridient.calories}
-                          proteins={ingridient.proteins}
-                          fat={ingridient.fat}
-                          carbohydrates={ingridient.carbohydrates}
+                        <IngredientElement key={tabState.types[index]+ '_' + ingridient._id} 
+                          ingridient={ingridient}
                         />
                       )
                     })
@@ -72,14 +120,9 @@ function BurgerIngredients(props: any) {
           })
         }
       </div>
-
     </React.Fragment>
   )
 
-}
-
-BurgerIngredients.propTypes = {
-  ingredientData: PropTypes.arrayOf(ingredientItemPropTypes)
 }
 
 export default BurgerIngredients;

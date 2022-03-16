@@ -1,160 +1,117 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useCallback } from "react";
 import {ConstructorElement, DragIcon, Button, CurrencyIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from './../order-details/order-details';
-import PropTypes from 'prop-types';
-import ingredientItemPropTypes from '../../utils/ingredient-item-prop-types';
-import IngridientsDataContext from "../services/IngridientsDataContext";
-import { Ingredient } from "../model/ingredient";
-import { cartData } from "../services/cartContext";
-import ConstructorDataContext from "../services/constructorDataContext";
+import { Ingredient } from "../../model/ingredient";
+import { useSelector, useDispatch } from "react-redux";
+import { getCreateOrder, ORDER_CLOSE } from "../../services/actions/orderActions";
+import { useDrop } from "react-dnd";
+import { addIngredient, moveIngredient, removeIngredient } from "../../services/actions/cartActions";
+import Card from "./card";
 
-const sentOrderUrl = 'https://norma.nomoreparties.space/api/orders';
+function BurgerConstructor() {
 
-function BurgerConstructor(props: any){
+  const cartData = useSelector((store: any) => store.cart);
+  const order = useSelector((store: any) => store.order);
+  const ingredientData = cartData.items;
+  const bunIngredient = ingredientData.find((item: Ingredient) => item.type === 'bun');
+  const centerIngredinets = ingredientData.filter((item: Ingredient)=> item.type !== 'bun');
 
-  const ingredientData = useContext(IngridientsDataContext) as Ingredient[];
-  const [orderOpen, setOrderOpen] = useState(false);
-
-  const [orderData, setOrderData] = useState(null);
-  const [cartState, dispatchCart] = useContext(ConstructorDataContext);
-
-  // Открыть окно заказа
+  const dispatch = useDispatch();
   const openOrder = () => {
-    let ingredients: any[] = [];
-    cartState.items.forEach((item: Ingredient) => {
-      ingredients.push(item._id);
+    let ingredientsIds: string[] = [];
+    cartData.items.forEach((item: Ingredient) => {
+      ingredientsIds.push(item._id);
     });
-    
-    const options = {
-      method: 'POST',
-      headers: {
-      'Content-Type': 'application/json'
-     },
-      body: JSON.stringify({"ingredients": ingredients})
-    };
-
-    // todo: добавить http класс для отправки и обработки запросов
-    fetch(sentOrderUrl, options as any)
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('ошибка ' + res.status);
-        }
-        return res.json();
-      })
-      .then((json: any) =>   {
-        if (!json.success) {
-          throw new Error('ошибка');
-        }
-        console.log('json', json);
-        setOrderData({
-          name: json.name,
-          number: json.order.number
-        } as any)
-        setOrderOpen(true);
-      })
-      .catch((error) => {
-        console.error('Что то пошло не так... :(', error);
-      })
-
+    dispatch(getCreateOrder(ingredientsIds));
   }
   const closeOrder = () => {
-    setOrderOpen(false);
+    dispatch({type: ORDER_CLOSE});
   }
 
-  const initCart = (ingredients: Ingredient[]): void => {
-    let oneBunFinded = false;
-    ingredients = ingredients.filter(item => {
-      if (item.type !== 'bun' || !oneBunFinded) {
-        if (item.type === 'bun') {
-          oneBunFinded = true;
-        }
-        return true;
-      }
-      return false;
-    });
-    dispatchCart(ingredients);
-  }
-  const clearCart = (): void => {
-    dispatchCart([]);
-  }
-  const addItemToCart = (ingredient: Ingredient): void => {
-    // todo: проверить что бы булка была только одна
-    const items = [...cartState.items];
-    items.push(ingredient);
-    dispatchCart(items);
-  }
-  const removeItemFromCart = (itemPosition: number): void => {
-    const items = [...cartState.items];
-    items.splice(itemPosition, 1);
-    dispatchCart(items);
+  const [{ isHover }, dropTarget] = useDrop({
+    accept: "ingredient",
+    collect: monitor => ({
+      isHover: monitor.isOver()
+    }),
+    drop(ingredient: any) {
+      dispatch(addIngredient(ingredient));
+    },
+  });
+  const removeItem = (index: number) => {
+    dispatch(removeIngredient(index));
   }
 
-  useEffect(() => {
-    initCart(ingredientData);
-  }, [ingredientData]);
+  const moveItems = useCallback((dragIndex: number, hoverIndex: number) => {
+    dispatch(moveIngredient(dragIndex, hoverIndex));
+  }, [dispatch]);
 
   return (
     <React.Fragment>
-      { ingredientData.length > 0 ?
-      <div className={styles.wrapMiddleInner}>
-        <div className={styles.wrap + ' ' +styles.wrapTop}>
-            <ConstructorElement
-              type="top"
-              isLocked={true}
-              text={ingredientData[0].name + ' (верх)'}
-              price={ingredientData[0].price}
-              thumbnail={ingredientData[0].image}
-            />
+      <div ref={dropTarget}> 
+        { ingredientData.length > 0 ?
+        <div className={styles.wrapMiddleInner}>
+          { bunIngredient ?
+          <div className={styles.wrap + ' ' +styles.wrapTop}>
+              <ConstructorElement
+                type="top"
+                isLocked={true}
+                text={bunIngredient.name + ' (верх)'}
+                price={bunIngredient.price}
+                thumbnail={bunIngredient.image}
+              />
+          </div>
+          : ''}
+
+          <div className={styles.wrapMiddle+ " mt-4 mb-4"} >
+            {
+              centerIngredinets.map((cnstructorElement: Ingredient, index: number)=> {
+                return (
+                  <Card index={index} key={cnstructorElement._id + '_' + (+ new Date())} id={cnstructorElement._id + '_' + (+ new Date())} moveCard={moveItems}>
+                    <DragIcon type="primary" />
+                    <ConstructorElement
+                      text={cnstructorElement.name}
+                      price={cnstructorElement.price}
+                      thumbnail={cnstructorElement.image}
+                      handleClose={() => {removeItem(index)}}
+                    />
+                  </Card>
+                )
+              })
+            }
+          </div>
+          <div className={styles.wrap + ' ' +styles.wrapBottom}>
+            { bunIngredient ? 
+              <ConstructorElement
+                type="bottom"
+                isLocked={true}
+                text={bunIngredient.name + ' (низ)'}
+                price={bunIngredient.price}
+                thumbnail={bunIngredient.image}
+              />
+            : "" }
+          </div>
         </div>
-        <div className={styles.wrapMiddle+ " mt-4 mb-4"} >
-          {
-            ingredientData.filter((item: any)=> item.type !== 'bun').map((cnstructorElement:any )=> {
-              return (
-                <div key={cnstructorElement._id}>
-                  <DragIcon type="primary" />
-                  <ConstructorElement
-                    text={cnstructorElement.name}
-                    price={cnstructorElement.price}
-                    thumbnail={cnstructorElement.image}
-                  />
-                </div>
-              )
-            })
-          }
-        </div>
-        <div className={styles.wrap + ' ' +styles.wrapBottom}>
-            <ConstructorElement
-              type="bottom"
-              isLocked={true}
-              text={ingredientData[0].name + ' (низ)'}
-              price={ingredientData[0].price}
-              thumbnail={ingredientData[0].image}
-            />
+        : '' }
+
+        <div className={styles.priceBlock + ' mt-10'}>
+          <div className="text text_type_digits-medium">
+            <span>{cartData.totalPrice}</span>
+            <CurrencyIcon type="primary" />
+          </div>
+          <div>
+          <Button disabled={ingredientData.length === 0} type="primary" size="large" onClick={openOrder}>Оформить заказ</Button>
+          </div>
         </div>
       </div>
-      : '' }
 
-      <div className={styles.priceBlock + ' mt-10'}>
-        <div className="text text_type_digits-medium">
-          <span>{cartState.totalPrice}</span>
-          <CurrencyIcon type="primary" />
-        </div>
-        <div>
-        <Button type="primary" size="large" onClick={openOrder}>Оформить заказ</Button>
-        </div>
-      </div>
-
-      <Modal isOpen={orderOpen} title={''} onClose={closeOrder}>
-        <OrderDetails order={orderData} />
+      <Modal isOpen={order.isOpen} title={''} onClose={closeOrder}>
+        <OrderDetails />
       </Modal>
     </React.Fragment>
   )
 }
 
-BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(ingredientItemPropTypes)
-}
 
 export default BurgerConstructor

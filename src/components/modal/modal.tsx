@@ -3,11 +3,19 @@ import ReactDOM from 'react-dom';
 import ModalOverlay from '../modal-overlay/modal-overlay'
 import styles from './modal.module.css';
 import {CloseIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 
 const modalRoot = document.getElementById("modals") as Element;
 
-function Modal(props: any) {
+interface propType {
+  children: any,
+  title: string,
+  onClose: any,
+  isOpen: boolean
+}
+
+function Modal(props: propType) {
+
+  const {onClose, title, children} = props;
 
   const [isOpen, setIsOpen] = useState(props.isOpen);
 
@@ -19,22 +27,15 @@ function Modal(props: any) {
     <>
       <div className={styles.modal + ' ' + ( isOpen === true ? styles.isOpen : '')}>
         <div className={styles.modalHeader + ' text text_type_main-large'}>
-          <CloseIcon onClick={props.onClose} type="primary" />
-          {props.title}
+          <CloseIcon onClick={onClose} type="primary" />
+          {title}
         </div>
-        {props.children}
+        {children}
       </div>
-      <ModalOverlay isOpen={isOpen} onClose={props.onClose} />
+      <ModalOverlay isOpen={isOpen} onClose={onClose} />
     </>,
     modalRoot
   );
-}
-
-Modal.propTypes = {
-  children: PropTypes.element,
-  title: PropTypes.string,
-  onClose: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired
 }
 
 export default Modal;

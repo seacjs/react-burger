@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import styles from './modal-overlay.module.css';
-import PropTypes from 'prop-types';
 
-function ModalOverlay(props: any) {
+interface propType {
+  onClose: any;
+  isOpen: boolean;
+}
+
+function ModalOverlay(props: propType) {
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -28,11 +32,6 @@ function ModalOverlay(props: any) {
       <div className={styles.modalOverlay + ' ' + (isOpen === true ? styles.isOpen : '')} onClick={close}></div>
     </>
   );
-}
-
-ModalOverlay.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired
 }
 
 export default ModalOverlay;

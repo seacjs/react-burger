@@ -1,7 +1,15 @@
 import styles from './ingredient-details.module.css'
-import PropTypes from 'prop-types';
 
-function IngredientDetails(props: any) {
+interface propType {
+  image: string, 
+  name: string, 
+  calories: number, 
+  proteins: number,
+  fat: number,
+  carbohydrates: number
+}
+
+function IngredientDetails(props: propType) {
 
   const energyМalues = ['calories', 'proteins', 'fat', 'carbohydrates'];
   const energyМaluesNames = ['Калории,ккал', 'Белки, г', 'Жиры, г', 'Углеводы, г'];
@@ -19,7 +27,7 @@ function IngredientDetails(props: any) {
             return (
               <div key={index} className={styles.energyМalueItem}>
                 <div className={'text text_type_main-default text_color_inactive'}>{energyМaluesNames[index]}</div>
-                <div className={'text text_type_main-default text_type_main-medium text_color_inactive'}>{props[item]}</div>
+                <div className={'text text_type_main-default text_type_main-medium text_color_inactive'}>{props[item as 'calories' |'proteins' | 'fat' |'carbohydrates']}</div>
               </div>
             )
           })
@@ -29,14 +37,5 @@ function IngredientDetails(props: any) {
     </>
   );
 }
-
-IngredientDetails.propTypes =  {
-  image: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  calories: PropTypes.number.isRequired,
-  proteins: PropTypes.number.isRequired,
-  fat: PropTypes.number.isRequired,
-  carbohydrates: PropTypes.number.isRequired
-};
 
 export default IngredientDetails;

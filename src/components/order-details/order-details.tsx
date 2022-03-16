@@ -1,9 +1,11 @@
 import styles from './order-details.module.css';
 import imageSrc from '../../images/done.png';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
-function OrderDetails(props: any) {
-  const {order} = props;
+
+function OrderDetails() {
+
+  const {order} = useSelector((store: any) => store.order);
 
   return (
     <>
@@ -21,17 +23,6 @@ function OrderDetails(props: any) {
       }
     </>
   );
-}
-
-OrderDetails.defaultProps = {
-  order: null
-}
-
-OrderDetails.propTypes = {
-  order: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    number: PropTypes.number.isRequired,
-  })
 }
 
 export default OrderDetails;
