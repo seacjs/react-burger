@@ -19,7 +19,7 @@ function Modal(props: propType) {
   const {onClose, title, children, isOpen, type} = props;
 
   const close = () => {
-    document.removeEventListener("keydown", handleEscapeKey, false);
+    // document.removeEventListener("keydown", handleEscapeKey, false);
     props.onClose();
   }
 
@@ -31,9 +31,9 @@ function Modal(props: propType) {
 
   useEffect(() => {
     isOpen && document.addEventListener("keydown", handleEscapeKey, false);
-    // return () => {
-    //   document.removeEventListener("keydown", handleEscapeKey, false);
-    // }
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey, false);
+    }
   }, [isOpen === true]);
 
   return ReactDOM.createPortal (
