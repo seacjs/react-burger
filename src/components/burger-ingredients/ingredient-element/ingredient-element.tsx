@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CLOSE_DETAIL, OPEN_DETAIL, showIngredient } from "../../../services/actions/ingredientDetailAction";
 import { useDrag } from "react-dnd";
 import { Ingredient } from "../../../model/ingredient";
+import CartIngredient from "../../../model/cartIngredient";
 
 interface propType  {
   ingridient: Ingredient
@@ -46,8 +47,8 @@ function IngredientElement(props: any) {
         !isDrag && 
         <div ref={dragRef} className={styles.card + ' mt-6 mb-10 align-center'} onClick={openDetail}>
           {
-            cart.items.filter((item: Ingredient) => item._id === ingridient._id).length ?
-            <Counter count={cart.items.filter((item: Ingredient) => item._id === ingridient._id).length} size="default" /> :
+            cart.items.filter((item: CartIngredient) => item.ingredient._id === ingridient._id).length ?
+            <Counter count={cart.items.filter((item: CartIngredient) => item.ingredient._id === ingridient._id).length} size="default" /> :
             ''
           }
           <img src={image} className={styles.img} alt={name} />
@@ -59,7 +60,7 @@ function IngredientElement(props: any) {
           </div>
         </div>
       }
-      <Modal isOpen={ingredientDetail.isOpen} title={name} onClose={closeDetail} type={'ingredinet'}>
+      <Modal isOpen={ingredientDetail.isOpen} title={'Детали ингредиента'} onClose={closeDetail} type={'ingredinet'}>
           <IngredientDetails />
       </Modal>
     </React.Fragment>

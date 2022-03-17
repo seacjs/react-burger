@@ -19,21 +19,21 @@ function Modal(props: propType) {
   const {onClose, title, children, isOpen, type} = props;
 
   const close = () => {
-    document.removeEventListener("keydown", isEscape, false);
+    document.removeEventListener("keydown", handleEscapeKey, false);
     props.onClose();
   }
 
-  const isEscape = (event: any) => {
-    if(isOpen && event.keyCode === 27) {
+  const handleEscapeKey = (event: any) => {
+    if(isOpen && event.key === "Escape") {
       close();
     }
   }
 
   useEffect(() => {
-    document.addEventListener("keydown", isEscape, false);
-    return () => {
-      document.removeEventListener("keydown", isEscape, false);
-    }
+    isOpen && document.addEventListener("keydown", handleEscapeKey, false);
+    // return () => {
+    //   document.removeEventListener("keydown", handleEscapeKey, false);
+    // }
   }, [isOpen === true]);
 
   return ReactDOM.createPortal (
