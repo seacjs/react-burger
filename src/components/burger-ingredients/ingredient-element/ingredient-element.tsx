@@ -1,66 +1,71 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {Counter, CurrencyIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './ingredient-element.module.css';
-import PropTypes from 'prop-types';
 import Modal from '../../modal/modal';
 import IngredientDetails from '../../ingredient-details/ingredient-details'
+import { useDispatch, useSelector } from "react-redux";
+import { CLOSE_DETAIL, OPEN_DETAIL, showIngredient } from "../../../services/actions/ingredientDetailAction";
+import { useDrag } from "react-dnd";
+import { Ingredient } from "../../../model/ingredient";
+import CartIngredient from "../../../model/cartIngredient";
+
+interface propType  {
+  ingridient: Ingredient
+}
 
 function IngredientElement(props: any) {
 
-  const [detailOpen, setDetailOpen] = useState(false);
+  const { image, price, name, calories, proteins, fat, carbohydrates} = props.ingridient;
+  const {ingridient} = props;
 
-  useEffect(() => {
-    setDetailOpen(detailOpen);
-  }, [detailOpen])
-  
+  const cart = useSelector((store: any) => store.cart);
+
+  const ingredientDetail = useSelector((store: any) => store.ingredientDetail);
+  const dispatch = useDispatch();
+
   const openDetail = () => {
-    setDetailOpen(true);
+    console.log('ingridient --- ',ingridient);
+    dispatch(showIngredient(ingridient));
+    
   }
   const closeDetail = () => {
-    setDetailOpen(false);
+    dispatch({type: CLOSE_DETAIL});
   }
+
+  const [{isDrag}, dragRef] = useDrag({
+      type: "ingredient",
+      item: ingridient,
+      collect: monitor => ({
+        isDrag: monitor.isDragging()
+    })
+  });
+
 
   return (
     <React.Fragment>
-      <div className={styles.card + ' mt-6 mb-10 align-center'} onClick={openDetail}>
-        {
-          props.count ?
-          <Counter count={props.count} size="default" /> :
-          ''
-        }
-        <img src={props.image} className={styles.img} alt={props.name} />
-        <div className={styles.price + ' text text_type_digits-default pt-1 pb-1'}> 
-          {props.price} <CurrencyIcon type="primary" />
+      { 
+        !isDrag && 
+        <div ref={dragRef} className={styles.card + ' mt-6 mb-10 align-center'} onClick={openDetail}>
+          {
+            cart.items.filter((item: CartIngredient) => item.ingredient._id === ingridient._id).length ?
+            <Counter count={cart.items.filter((item: CartIngredient) => item.ingredient._id === ingridient._id).length} size="default" /> :
+            ''
+          }
+          <img src={image} className={styles.img} alt={name} />
+          <div className={styles.price + ' text text_type_digits-default pt-1 pb-1'}> 
+            {price} <CurrencyIcon type="primary" />
+          </div>
+          <div className={styles.name}> 
+            {name}
+          </div>
         </div>
-        <div className={styles.name}> 
-          {props.name}
-        </div>
-      </div>
-      <Modal isOpen={detailOpen} title={props.name} onClose={closeDetail}>
-        <IngredientDetails
-          image={props.image}
-          name={props.name}
-          calories={props.calories}
-          proteins={props.proteins}
-          fat={props.fat}
-          carbohydrates={props.carbohydrates}
-        />
+      }
+      <Modal isOpen={ingredientDetail.isOpen} title={'Детали ингредиента'} onClose={closeDetail} type={'ingredinet'}>
+          <IngredientDetails />
       </Modal>
     </React.Fragment>
   )
 
 }
-
-IngredientElement.propTypes =  {
-  openModal: PropTypes.func,
-  count: PropTypes.number,
-  image: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  calories: PropTypes.number.isRequired,
-  proteins: PropTypes.number.isRequired,
-  fat: PropTypes.number.isRequired,
-  carbohydrates: PropTypes.number.isRequired
-};
 
 export default IngredientElement
