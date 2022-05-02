@@ -33,7 +33,8 @@ const orderReducer = (state: initialStateOrder = initialState, action: any): any
     }
     case CREATE_ORDER_FAILED: {
       return { 
-        ...state, orderFailed: true, 
+        ...state, 
+        orderFailed: true, 
         orderRequest: false 
       };
     }

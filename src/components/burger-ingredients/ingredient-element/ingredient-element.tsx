@@ -8,6 +8,7 @@ import { CLOSE_DETAIL, OPEN_DETAIL, showIngredient } from "../../../services/act
 import { useDrag } from "react-dnd";
 import { Ingredient } from "../../../model/ingredient";
 import CartIngredient from "../../../model/cartIngredient";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface propType  {
   ingridient: Ingredient
@@ -19,17 +20,20 @@ function IngredientElement(props: any) {
   const {ingridient} = props;
 
   const cart = useSelector((store: any) => store.cart);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const ingredientDetail = useSelector((store: any) => store.ingredientDetail);
   const dispatch = useDispatch();
 
   const openDetail = () => {
     console.log('ingridient --- ',ingridient);
+    navigate( `/ingredients/${ingridient._id}`, {state: { backgroundLocation: location }});
     dispatch(showIngredient(ingridient));
-    
   }
   const closeDetail = () => {
     dispatch({type: CLOSE_DETAIL});
+    navigate(-1);
   }
 
   const [{isDrag}, dragRef] = useDrag({

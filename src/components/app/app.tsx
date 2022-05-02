@@ -1,37 +1,87 @@
 import AppHeader from '../app-header/app-header';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
+// import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+// import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { useEffect } from 'react';
 import styles from './app.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredinets } from '../../services/actions/ingredientsAction';
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+// import { DndProvider } from "react-dnd";
+// import { HTML5Backend } from "react-dnd-html5-backend";
+import {BrowserRouter as Router, Route, Routes, useLocation, useNavigate} from 'react-router-dom';
+import Constructor from '../../pages/constructor/constructor';
+import Login from '../../pages/auth/login/login';
+import Register from '../../pages/auth/register/register';
+import ForgotPassword from '../../pages/auth/forgot-password/forgon-password';
+import ResetPassword from '../../pages/auth/reset-password/reset-password';
+import Profile from '../../pages/profile/profile';
+import Ingredient from '../../pages/ingredient/Ingredient';
+import {  getUser } from '../../services/actions/authAction';
+import ProtectedRoute from '../protected-route/protected-route';
 
 function App() {
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getIngredinets());
+    dispatch(getUser());
   }, []);
 
   const ingredientData = useSelector((store: any) => store.ingredients.items);
-  
+
+  const Switcher = () => {
+
+    const {islogged} = useSelector((store: any) => { return store.auth});
+    const location = useLocation();
+    let state = location.state as { backgroundLocation?: Location };
+
+    return (
+      <>
+          <div className={styles.App}>
+          <AppHeader />
+          <main>
+          <Routes location={state?.backgroundLocation || location}>
+            <Route path="/" element={<Constructor pageTitle={'Конструктор бургеров'}/>} />
+
+            {/*
+             <ProtectedRoute path="/login" condition={!islogged} redirectTo={'/'} element={<Login pageTitle={'Страница авторизации'}/>} />
+            <ProtectedRoute path="/register" condition={!islogged} redirectTo={'/'} element={<Register pageTitle={'Страница регистрации'}/>} />
+            <ProtectedRoute path="/forgot-password" condition={!islogged} redirectTo={'/'} element={<ForgotPassword pageTitle={'Страница восстановления пароля'}/>} />
+            <ProtectedRoute path="/reset-password" condition={!islogged} redirectTo={'/'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} /> 
+            */}
+            <Route path="/login" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<Login pageTitle={'Страница авторизации'}/>} />} />
+            <Route path="/register" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<Register pageTitle={'Страница регистрации'}/>} />} />
+            <Route path="/forgot-password" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<ForgotPassword pageTitle={'Страница восстановления пароля'}/>} />} />
+            <Route path="/reset-password/:token" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />} />
+            <Route path="/reset-password" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />} />
+
+            {/* <Route path="/login" element={<Login pageTitle={'Страница авторизации'}/>} />
+            <Route path="/register" element={<Register pageTitle={'Страница регистрации'}/>} />
+            <Route path="/forgot-password" element={<ForgotPassword pageTitle={'Страница восстановления пароля'}/>} />
+            <Route path="/reset-password" element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />
+            <Route path="/profile" element={<Profile pageTitle={'Настройки пользователя'}/>} /> */}
+            
+            <Route path="/profile" element={<ProtectedRoute condition={islogged} redirectTo={'/login'} element={<Profile pageTitle={'Настройки пользователя'}/>} />} />
+
+            <Route path="/ingredients/:id" element={<Ingredient pageTitle={'Страница ингридиента'}/>} />
+          </Routes>
+          </main>
+          </div>
+      </>
+    );
+  }
+
+
+  // const {title} = useSelector((store: any) => store.app);
+  // useEffect(() => {
+  //   document.title = title;
+  // },[title])
+
   return (
-    <div className={styles.App}>
-      <AppHeader />
-      <main>
-      <DndProvider backend={HTML5Backend}>
-        <section className={styles.left}>
-          <BurgerIngredients />
-        </section>
-        <section className={styles.right + ' mt-25'}>
-          <BurgerConstructor />
-        </section>
-      </DndProvider>
-      </main>
-    </div>
+    <Router>
+      <Switcher />
+    </Router>
   );
+
 }
 
 export default App;

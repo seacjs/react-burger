@@ -4,10 +4,12 @@ import IngredientElement from './ingredient-element/ingredient-element';
 import styles from './burger-ingrediends.module.css';
 import { useSelector } from "react-redux";
 import { Ingredient } from "../../model/ingredient";
+import { Link, useLocation } from "react-router-dom";
 
 function BurgerIngredients() {
 
   const ingredientData = useSelector((store: any) => store.ingredients.items);
+  const location = useLocation();
 
   // TABS START
   const initialTabState = {
@@ -108,9 +110,7 @@ function BurgerIngredients() {
                   {
                     ingredientData.filter((item: Ingredient) => item.type === tabState.types[index]).map((ingridient: Ingredient, ingridientIndex: number) => {
                       return (
-                        <IngredientElement key={ingridient._id} 
-                          ingridient={ingridient}
-                        />
+                          <IngredientElement key={ingridient._id} ingridient={ingridient}/>
                       )
                     })
                   }
