@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getIngredinets } from '../../services/actions/ingredientsAction';
 // import { DndProvider } from "react-dnd";
 // import { HTML5Backend } from "react-dnd-html5-backend";
-import {BrowserRouter as Router, Route, Routes, useLocation, useNavigate} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
 import Constructor from '../../pages/constructor/constructor';
 import Login from '../../pages/auth/login/login';
 import Register from '../../pages/auth/register/register';
@@ -30,9 +30,11 @@ function App() {
 
   const Switcher = () => {
 
-    const {islogged} = useSelector((store: any) => { return store.auth});
+    const {islogged, forgotPasswordEmailSended} = useSelector((store: any) => { return store.auth});
     const location = useLocation();
-    let state = location.state as { backgroundLocation?: Location };
+    let state = location.state as { backgroundLocation?: Location, from: any };
+
+    console.log('----' , state, location);
 
     return (
       <>
@@ -41,25 +43,11 @@ function App() {
           <main>
           <Routes location={state?.backgroundLocation || location}>
             <Route path="/" element={<Constructor pageTitle={'Конструктор бургеров'}/>} />
-
-            {/*
-             <ProtectedRoute path="/login" condition={!islogged} redirectTo={'/'} element={<Login pageTitle={'Страница авторизации'}/>} />
-            <ProtectedRoute path="/register" condition={!islogged} redirectTo={'/'} element={<Register pageTitle={'Страница регистрации'}/>} />
-            <ProtectedRoute path="/forgot-password" condition={!islogged} redirectTo={'/'} element={<ForgotPassword pageTitle={'Страница восстановления пароля'}/>} />
-            <ProtectedRoute path="/reset-password" condition={!islogged} redirectTo={'/'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} /> 
-            */}
-            <Route path="/login" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<Login pageTitle={'Страница авторизации'}/>} />} />
+            <Route path="/login" element={<ProtectedRoute condition={!islogged} redirectTo={state?.from?.pathname || '/' } element={<Login pageTitle={'Страница авторизации'}/>} />} />
             <Route path="/register" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<Register pageTitle={'Страница регистрации'}/>} />} />
             <Route path="/forgot-password" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<ForgotPassword pageTitle={'Страница восстановления пароля'}/>} />} />
-            <Route path="/reset-password/:token" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />} />
-            <Route path="/reset-password" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />} />
-
-            {/* <Route path="/login" element={<Login pageTitle={'Страница авторизации'}/>} />
-            <Route path="/register" element={<Register pageTitle={'Страница регистрации'}/>} />
-            <Route path="/forgot-password" element={<ForgotPassword pageTitle={'Страница восстановления пароля'}/>} />
-            <Route path="/reset-password" element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />
-            <Route path="/profile" element={<Profile pageTitle={'Настройки пользователя'}/>} /> */}
-            
+            <Route path="/reset-password/:token" element={<ProtectedRoute condition={!islogged && forgotPasswordEmailSended} redirectTo={islogged ? "/" :'/forgot-password'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />} />
+            <Route path="/reset-password" element={<ProtectedRoute condition={!islogged && forgotPasswordEmailSended} redirectTo={islogged ? "/" : '/forgot-password'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />} />
             <Route path="/profile" element={<ProtectedRoute condition={islogged} redirectTo={'/login'} element={<Profile pageTitle={'Настройки пользователя'}/>} />} />
 
             <Route path="/ingredients/:id" element={<Ingredient pageTitle={'Страница ингридиента'}/>} />

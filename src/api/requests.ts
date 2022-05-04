@@ -1,11 +1,7 @@
-import { useDispatch } from 'react-redux';
 const baseUrl = 'https://norma.nomoreparties.space/api';
 
-const checkResponse = (response: Response) => {
-  if (!response.ok) {
-      // throw new Error('ошибка ' + response.status);
-  }
-  return response.json();
+export function checkResponse(response: Response) {
+  return response.ok ? response.json() : Promise.reject(response);
 }
 
 export const getIngredientsRequest = () => {
@@ -17,8 +13,8 @@ export const getCreateOrderRequest = (ids: string[], accessToken: string) => {
   const options = {
     method: 'POST',
     headers: {
-    'Content-Type': 'application/json',
-    'authorization': accessToken
+      'Content-Type': 'application/json',
+      'authorization': accessToken
     },
     body: JSON.stringify({"ingredients": ids})
   };
@@ -91,12 +87,11 @@ export const getLogoutRequest = (accessToken: string, refreshToken: string) => {
 }
 
 // token
-export const getTokenRequest = (accessToken: string, refreshToken: string) => {
+export const getTokenRequest = (refreshToken: string) => {
   const options = {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'authorization': accessToken
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({"token": refreshToken})
   };
@@ -106,7 +101,7 @@ export const getTokenRequest = (accessToken: string, refreshToken: string) => {
 }
 
 // get user data
-export const getUserRequest = (accessToken: string,) => {
+export const getUserRequest = (accessToken: string) => {
   const options = {
     method: 'GET',
     headers: {

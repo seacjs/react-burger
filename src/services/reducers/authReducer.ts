@@ -1,6 +1,6 @@
 import { User } from './../../model/user';
 import { v4 as uuidv4 } from 'uuid';
-import { FORGOT_PASSWORD, FORGOT_PASSWORD_FAILED, FORGOT_PASSWORD_REQUEST, FORGOT_PASSWORD_SUCCESS, LOGIN_FAILED, LOGIN_REQUEST, LOGIN_SUCCESS, REGISTER_FAILED, REGISTER_REQUEST, REGISTER_SUCCESS, RESET_PASSWORD_FAILED, RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, USER_FAILED, USER_REQUEST, USER_SUCCESS } from '../actions/authAction';
+import { FORGOT_PASSWORD, FORGOT_PASSWORD_FAILED, FORGOT_PASSWORD_REQUEST, FORGOT_PASSWORD_SUCCESS, LOGIN_FAILED, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT_FAILED, LOGOUT_REQUEST, LOGOUT_SUCCESS, REGISTER_FAILED, REGISTER_REQUEST, REGISTER_SUCCESS, RESET_PASSWORD_FAILED, RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, USER_FAILED, USER_REQUEST, USER_SUCCESS, USER_UPDATE_FAILED, USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS } from '../actions/authAction';
 
 
 interface initialStateType {
@@ -30,6 +30,11 @@ const initialState = {
     loginFailed: false,
     registerRequest: false,
     registerFailed: false,
+
+    userUpdateFailed: false,
+    userUpdateRequest: false,
+    logoutFailed: false,
+    logoutRequest: false,
 
     
     isLogged: false,
@@ -164,6 +169,50 @@ const authReducer = (state: initialStateType = initialState, action: any): any =
           isLogged: false,
           registerFailed: true, 
           registerRequest: false 
+        };
+      }
+
+      case USER_UPDATE_REQUEST: {
+        return {
+            ...state,
+            userUpdateRequest: true,
+        };
+      }
+      case USER_UPDATE_SUCCESS: {
+        return { 
+          ...state,
+          user: action.user,
+          userUpdateFailed: false,
+          userUpdateRequest: false
+        };
+      }
+      case USER_UPDATE_FAILED: {
+        return { 
+          ...state, 
+          userUpdateFailed: true, 
+          userUpdateRequest: false 
+        };
+      }
+      case LOGOUT_REQUEST: {
+        return {
+            ...state,
+            logoutRequest: true,
+        };
+      }
+      case LOGOUT_SUCCESS: {
+        return { 
+          ...state,
+          islogged: false,
+          user: null,
+          logoutFailed: false,
+          logoutRequest: false
+        };
+      }
+      case LOGOUT_FAILED: {
+        return { 
+          ...state, 
+          loginFailed: true, 
+          loginRequest: false 
         };
       }
 

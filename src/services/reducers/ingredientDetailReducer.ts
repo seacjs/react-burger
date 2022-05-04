@@ -17,7 +17,7 @@ const ingredientDetailReducer = (state: initialStateDetail = initialState, actio
       return {
         ...state,
         ingredient: action.ingredient,
-        isOpen: true
+        isOpen: action.isOpen
       }
     }
     case CLOSE_DETAIL: {

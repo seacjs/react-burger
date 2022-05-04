@@ -1,5 +1,6 @@
-import { getLoginRequest, getTokenRequest, getRegisterRequest, getLogoutRequest, getUserRequest, getForgotPasswordRequest, getResetPasswordRequest } from './../../api/requests';
+import { getLoginRequest, getTokenRequest, getRegisterRequest, getLogoutRequest, getUserRequest, getForgotPasswordRequest, getResetPasswordRequest, getPatchUserRequest } from './../../api/requests';
 import { Dispatch } from 'react';
+import { deleteCookie, getCookie, setCookie } from '../../utils/cookie';
 
 const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
 const FORGOT_PASSWORD_REQUEST = 'FORGOT_PASSWORD_REQUEST';
@@ -23,6 +24,9 @@ const LOGOUT_FAILED = 'LOGOUT_FAILED';
 const TOKEN_REQUEST = 'TOKEN_REQUEST';
 const TOKEN_SUCCESS = 'TOKEN_SUCCESS';
 const TOKEN_FAILED = 'TOKEN_FAILED';
+const USER_UPDATE_REQUEST = 'USER_UPDATE_REQUEST';
+const USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
+const USER_UPDATE_FAILED = 'USER_UPDATE_FAILED';
 
 export function getForgotPassword(email: string) {
   return function(dispatch: Dispatch<any>) {
@@ -76,9 +80,8 @@ export function getResetPassword(password: string, token: string) {
 
 export function getUser() {
   return function(dispatch: Dispatch<any>) {
-    const accessToken = window.localStorage.getItem('accessToken') as string;
-    const refreshToken = window.localStorage.getItem('refreshToken') as string;
-    console.log('accessToken', accessToken);
+    // const accessToken = window.localStorage.getItem('accessToken') as string;
+    const accessToken = getCookie('accessToken') as string;
     dispatch({
       type: USER_REQUEST
     });
@@ -90,18 +93,18 @@ export function getUser() {
           user: json.user,
         });
       } else {
-        console.log('refreshToken', refreshToken);
-        if(json.message == 'jwt expired') {
-          dispatch(getToken(accessToken, refreshToken));
-        }
         dispatch({
           type: USER_FAILED
         });
-        dispatch({
-          type: TOKEN_REQUEST
-        });
       }
     }).catch(error => {
+        if(error.status === 403) {
+          const refreshToken = window.localStorage.getItem('refreshToken') as string;
+          if (refreshToken) {
+            dispatch(getToken(refreshToken));
+            dispatch(getUser());
+          }
+        }
         console.log('error', error);
         dispatch({
           type: USER_FAILED
@@ -112,7 +115,8 @@ export function getUser() {
 
 export function getLogin(email: string, password: string) {
     return function(dispatch: Dispatch<any>) {
-      const accessToken = window.localStorage.getItem('accessToken') as string;
+      // const accessToken = window.localStorage.getItem('accessToken') as string;
+      const accessToken = getCookie('accessToken') as string;
       dispatch({
         type: LOGIN_REQUEST
       });
@@ -123,7 +127,8 @@ export function getLogin(email: string, password: string) {
             type: LOGIN_SUCCESS,
             user: json.user,
           });
-          window.localStorage.setItem('accessToken', json.accessToken);
+          setCookie('accessToken', json.accessToken);
+          // window.localStorage.setItem('accessToken', json.accessToken);
           window.localStorage.setItem('refreshToken', json.refreshToken);
         } else {
           dispatch({
@@ -151,7 +156,9 @@ export function getRegister(name: string, email: string, password: string) {
             type: REGISTER_SUCCESS,
             user: json.user,
           });
-          window.localStorage.setItem('accessToken', json.accessToken);
+          setCookie('accessToken', json.accessToken);
+          // setCookie('refreshToken', json.refreshToken);
+          // window.localStorage.setItem('accessToken', json.accessToken);
           window.localStorage.setItem('refreshToken', json.refreshToken);
           dispatch({
             type: USER_REQUEST,
@@ -170,27 +177,61 @@ export function getRegister(name: string, email: string, password: string) {
     };
 }
 
-export function getToken(accessToken: string, refreshToken: string) {
+export function getUpdate(name: string, email: string, password: string) {
+  return function(dispatch: Dispatch<any>) {
+    const accessToken = getCookie('accessToken') as string; //window.localStorage.getItem('accessToken') as string;
+    dispatch({
+      type: USER_UPDATE_REQUEST
+    });
+    getPatchUserRequest(accessToken, {name: name, email: email, password: password}).then(json => {
+      if (json && json.success) {
+        console.log('getUpdateRequest json:', json);
+        dispatch({
+          type: USER_UPDATE_SUCCESS,
+          user: json.user,
+        });
+      } else {
+        dispatch({
+          type: USER_UPDATE_FAILED
+        });
+      }
+    }).catch(error => {
+        if(error.status === 403) {
+          const refreshToken = window.localStorage.getItem('refreshToken') as string;
+          if (refreshToken) {
+            dispatch(getToken(refreshToken));
+            dispatch(getUpdate(name, email, password));
+          }
+        }
+        console.log('error', error);
+        dispatch({
+          type: USER_UPDATE_FAILED
+        });
+    });
+  };
+}
+
+export function getToken(refreshToken: string) {
     return function(dispatch: Dispatch<any>) {
       dispatch({
         type: LOGIN_REQUEST
       });
-      getTokenRequest(accessToken, refreshToken).then(json => {
+      getTokenRequest(refreshToken).then(json => {
         if (json && json.success) {
           console.log('getTokenRequest json:', json);
           dispatch({
-            type: LOGIN_SUCCESS,
+            type: TOKEN_SUCCESS,
           });
-          dispatch(getUser());
+          // return Promise.resolve();
         } else {
           dispatch({
-            type: LOGIN_FAILED
+            type: TOKEN_FAILED
           });
         }
       }).catch(error => {
           console.log('error', error);
           dispatch({
-            type: LOGIN_FAILED
+            type: TOKEN_FAILED
           });
       });
     };
@@ -199,7 +240,9 @@ export function getToken(accessToken: string, refreshToken: string) {
 export function getLogout() {
   return function(dispatch: Dispatch<any>) {
     const refreshToken = window.localStorage.getItem('refreshToken') as string;
-    const accessToken = window.localStorage.getItem('accessToken') as string;
+    // const accessToken = window.localStorage.getItem('accessToken') as string;
+    const accessToken = getCookie('accessToken') as string;
+    // const refreshToken = getCookie('refreshToken') as string;
     dispatch({
       type: LOGOUT_REQUEST
     });
@@ -208,9 +251,10 @@ export function getLogout() {
         console.log('getLogoutRequest json:', json);
         dispatch({
           type: LOGOUT_SUCCESS,
-          user: json.user,
         });
-        window.localStorage.removeItem('accessToken');
+        deleteCookie('accessToken');
+        // deleteCookie('refreshToken');
+        // window.localStorage.removeItem('accessToken');
         window.localStorage.removeItem('refreshToken');
       } else {
         dispatch({
@@ -250,5 +294,9 @@ export {
 
     USER_REQUEST,
     USER_SUCCESS,
-    USER_FAILED
+    USER_FAILED,
+    
+    USER_UPDATE_REQUEST,
+    USER_UPDATE_SUCCESS,
+    USER_UPDATE_FAILED
 };

@@ -23,17 +23,11 @@ function IngredientElement(props: any) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const ingredientDetail = useSelector((store: any) => store.ingredientDetail);
   const dispatch = useDispatch();
 
   const openDetail = () => {
-    console.log('ingridient --- ',ingridient);
     navigate( `/ingredients/${ingridient._id}`, {state: { backgroundLocation: location }});
     dispatch(showIngredient(ingridient));
-  }
-  const closeDetail = () => {
-    dispatch({type: CLOSE_DETAIL});
-    navigate(-1);
   }
 
   const [{isDrag}, dragRef] = useDrag({
@@ -64,9 +58,6 @@ function IngredientElement(props: any) {
           </div>
         </div>
       }
-      <Modal isOpen={ingredientDetail.isOpen} title={'Детали ингредиента'} onClose={closeDetail} type={'ingredinet'}>
-          <IngredientDetails />
-      </Modal>
     </React.Fragment>
   )
 

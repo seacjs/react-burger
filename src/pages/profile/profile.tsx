@@ -1,13 +1,12 @@
-import { Input, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, Input, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { getLogout } from '../../services/actions/authAction';
+import { useNavigate } from 'react-router-dom';
+import { getLogout, getUpdate } from '../../services/actions/authAction';
 import styles from './profile.module.css';
 
 function Profile(props: any) {
-    const user = useSelector((store: any) => store.auth.user);
-
+    const {user} = useSelector((store: any) => store.auth);
     const dispatch = useDispatch();
     const logout = () => {
         dispatch(getLogout());
@@ -18,9 +17,19 @@ function Profile(props: any) {
     const [password, setЗassword] = useState('');
 
     useEffect(() => {
-        setName(user.name);
-        setEmail(user.email);
+        setName(user?.name);
+        setEmail(user?.email);
+        setЗassword('');
     },[user])
+
+    const update = () => {
+        dispatch(getUpdate(name, email, password));
+    } 
+    const cancel = () => {
+        setName(user?.name);
+        setEmail(user?.email);
+        setЗassword('');
+    } 
 
     const setCurrent = () => {} 
 
@@ -72,6 +81,17 @@ function Profile(props: any) {
                     name={'email'}
                     error={false}
                 />
+
+                {
+                    user?.name != name || user?.email != email ? (
+                        <div>
+                            <Button type="primary" size="medium" onClick={update}>Сохранить</Button>
+                            <Button type="primary" size="medium" onClick={cancel}>Отменить</Button>
+                        </div>
+                    ) : ''
+                }
+
+
                 </div>
             </div>
 

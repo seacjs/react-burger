@@ -1,5 +1,5 @@
 import {Logo, BurgerIcon, ListIcon, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import AppHeaderButton from './app-header-button/app-header-button';
@@ -7,9 +7,12 @@ import styles from './app-header.module.css';
 
 function AppHeader() {
 
-  const {islogged, user} = useSelector((store: any) => store.auth);
+  const {user} = useSelector((store: any) => store.auth);
+  let [username, setUsername] = useState('');
 
-  const lkLink = (islogged ? '/profile' : '/login');
+  useEffect(() => {
+    setUsername(user ? user?.name : '');
+  },[user]);
 
   return (
     <header className={styles.header + ' container pt-4 pb-4'}>
@@ -25,9 +28,9 @@ function AppHeader() {
       </nav>
       <Logo />
       <nav>
-        <Link to={lkLink}>
+        <Link to={'/profile'}>
           <AppHeaderButton>
-            <ProfileIcon type="primary" /> <span className="pl-2">Личный кабинет {user ? user.name : ''}</span>
+            <ProfileIcon type="primary" /> <span className="pl-2">Личный кабинет {username}</span>
           </AppHeaderButton>
         </Link>
 

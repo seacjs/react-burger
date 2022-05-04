@@ -1,15 +1,17 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function ProtectedRoute(props: any) {
     const {condition, redirectTo, element} = props;
     const navigate = useNavigate();
+    const location = useLocation();
 
-    if (!condition) { 
-         navigate(redirectTo);
-         return (
-             <></>
-         );
-    }
+    useEffect(() => {
+        if (!condition) { 
+            navigate(redirectTo, {state: {from: location}});
+       }
+    }, [condition, redirectTo])
+
 
     return (
         <>
