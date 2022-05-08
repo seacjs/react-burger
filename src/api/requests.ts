@@ -96,7 +96,7 @@ export const getTokenRequest = (refreshToken: string) => {
     body: JSON.stringify({"token": refreshToken})
   };
 
-  return fetch(`${baseUrl}/auth/token`, options)
+  return  fetch(`${baseUrl}/auth/token`, options)
     .then(checkResponse);
 }
 

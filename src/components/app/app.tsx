@@ -34,7 +34,7 @@ function App() {
     const location = useLocation();
     let state = location.state as { backgroundLocation?: Location, from: any };
 
-    console.log('----' , state, location);
+    // console.log('App, location: ' , location);
 
     return (
       <>

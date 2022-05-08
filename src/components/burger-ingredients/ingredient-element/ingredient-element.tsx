@@ -22,11 +22,12 @@ function IngredientElement(props: any) {
   const cart = useSelector((store: any) => store.cart);
   const navigate = useNavigate();
   const location = useLocation();
+  let stateLcation = location.state as { backgroundLocation?: Location, from: any, ingridientId: any };
 
   const dispatch = useDispatch();
 
   const openDetail = () => {
-    navigate( `/ingredients/${ingridient._id}`, {state: { backgroundLocation: location }});
+    navigate( `/ingredients/${ingridient._id}`, {state: { backgroundLocation: location, ingridientId: ingridient._id}});
     dispatch(showIngredient(ingridient));
   }
 
@@ -37,6 +38,15 @@ function IngredientElement(props: any) {
         isDrag: monitor.isDragging()
     })
   });
+
+  useEffect(() => {
+    if(stateLcation && (stateLcation?.backgroundLocation?.pathname !== location?.pathname)) {
+      // navigate( `/ingredients/${ingridient._id}`, {state: { backgroundLocation: stateLcation.backgroundLocation }});
+      if(stateLcation?.ingridientId === ingridient._id) {
+        dispatch(showIngredient(ingridient));
+      }
+    }
+  }, []);
 
 
   return (

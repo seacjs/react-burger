@@ -110,7 +110,13 @@ function BurgerIngredients() {
                   {
                     ingredientData.filter((item: Ingredient) => item.type === tabState.types[index]).map((ingridient: Ingredient, ingridientIndex: number) => {
                       return (
+                        // <Link
+                        // key={ingridient._id}
+                        // to={'ingredients/'+ingridient._id}
+                        // state={{backgroundLocation: location}}
+                        // >
                           <IngredientElement key={ingridient._id} ingridient={ingridient}/>
+                        // </Link>
                       )
                     })
                   }

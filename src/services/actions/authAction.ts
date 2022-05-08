@@ -35,7 +35,7 @@ export function getForgotPassword(email: string) {
     });
     getForgotPasswordRequest(email).then(json => {
       if (json && json.success) {
-        console.log('getLoginRequest json:', json);
+        console.log('getForgotPasswordRequest json:', json);
         dispatch({
           type: FORGOT_PASSWORD_SUCCESS,
         });
@@ -87,7 +87,7 @@ export function getUser() {
     });
     getUserRequest(accessToken).then(json => {
       if (json && json.success) {
-        console.log('getLoginRequest json:', json);
+        console.log('getUserRequest json:', json);
         dispatch({
           type: USER_SUCCESS,
           user: json.user,
@@ -99,11 +99,7 @@ export function getUser() {
       }
     }).catch(error => {
         if(error.status === 403) {
-          const refreshToken = window.localStorage.getItem('refreshToken') as string;
-          if (refreshToken) {
-            dispatch(getToken(refreshToken));
-            dispatch(getUser());
-          }
+          dispatch(getToken(getUser));
         }
         console.log('error', error);
         dispatch({
@@ -196,25 +192,25 @@ export function getUpdate(name: string, email: string, password: string) {
         });
       }
     }).catch(error => {
+      if(error.status === 403) {
         if(error.status === 403) {
-          const refreshToken = window.localStorage.getItem('refreshToken') as string;
-          if (refreshToken) {
-            dispatch(getToken(refreshToken));
-            dispatch(getUpdate(name, email, password));
-          }
+          dispatch(getToken(getUpdate, [name, email, password]));
         }
-        console.log('error', error);
-        dispatch({
-          type: USER_UPDATE_FAILED
-        });
+      }
+      console.log('error', error);
+      dispatch({
+        type: USER_UPDATE_FAILED
+      });
     });
   };
 }
 
-export function getToken(refreshToken: string) {
+export function getToken( action: any, actionParams: any[] = []) {
     return function(dispatch: Dispatch<any>) {
+      const refreshToken = window.localStorage.getItem('refreshToken') as string;
+      console.log('start refresh');
       dispatch({
-        type: LOGIN_REQUEST
+        type: TOKEN_REQUEST
       });
       getTokenRequest(refreshToken).then(json => {
         if (json && json.success) {
@@ -222,7 +218,11 @@ export function getToken(refreshToken: string) {
           dispatch({
             type: TOKEN_SUCCESS,
           });
-          // return Promise.resolve();
+          setCookie('accessToken', json.accessToken);
+          window.localStorage.setItem('refreshToken', json.refreshToken);
+          // ...actionParams
+          console.log('.............   :', ...actionParams);
+          dispatch(action(...actionParams));
         } else {
           dispatch({
             type: TOKEN_FAILED
@@ -230,6 +230,8 @@ export function getToken(refreshToken: string) {
         }
       }).catch(error => {
           console.log('error', error);
+          deleteCookie('accessToken');
+          window.localStorage.removeItem('refreshToken');
           dispatch({
             type: TOKEN_FAILED
           });
