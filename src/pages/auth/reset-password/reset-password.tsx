@@ -1,17 +1,18 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { PagePropsType } from '../../../model/page-props-type';
 import { getResetPassword } from '../../../services/actions/authAction';
 import AuthBase from '../auth-base';
 
-function ResetPassword(props: any) {
+const ResetPassword: FC<PagePropsType> = () => {
 
     const params = useParams();
 
-    const [password, setPassword] = useState('');
-    const [token, setToken] = useState('');
+    const [password, setPassword] = useState<string>('');
+    const [token, setToken] = useState<string>('');
     const dispatch = useDispatch();
     const {resetPasswordSuccess} = useSelector((store: any) => store.auth);
     const navigate = useNavigate();

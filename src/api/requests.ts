@@ -1,6 +1,9 @@
 const baseUrl = 'https://norma.nomoreparties.space/api';
 
-export function checkResponse(response: Response) {
+type TFCheckResponse = (response: Response) => Promise<any>;
+
+
+export const checkResponse: TFCheckResponse = (response: Response) => {
   return response.ok ? response.json() : Promise.reject(response);
 }
 
@@ -9,7 +12,7 @@ export const getIngredientsRequest = () => {
     .then(checkResponse);
 };
 
-export const getCreateOrderRequest = (ids: string[], accessToken: string) => {
+export const getCreateOrderRequest = (ids: string[], accessToken: string): Promise<any> => {
   const options = {
     method: 'POST',
     headers: {
@@ -23,7 +26,7 @@ export const getCreateOrderRequest = (ids: string[], accessToken: string) => {
     .then(checkResponse);
 };
 
-export const getForgotPasswordRequest = (email: string) => {
+export const getForgotPasswordRequest = (email: string): Promise<any> => {
   const options = {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -34,7 +37,7 @@ export const getForgotPasswordRequest = (email: string) => {
     .then(checkResponse);
 }
 
-export const getResetPasswordRequest = (password: string, token: string) => {
+export const getResetPasswordRequest = (password: string, token: string): Promise<any> => {
   const options = {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -48,7 +51,7 @@ export const getResetPasswordRequest = (password: string, token: string) => {
 // AUTH
 
 // login
-export const getLoginRequest = (password: string, email: string) => {
+export const getLoginRequest = (password: string, email: string): Promise<any> => {
   const options = {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -60,7 +63,7 @@ export const getLoginRequest = (password: string, email: string) => {
 }
 
 // regiseter
-export const getRegisterRequest = (name: string, email: string, password: string) => {
+export const getRegisterRequest = (name: string, email: string, password: string): Promise<any> => {
   const options = {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -72,7 +75,7 @@ export const getRegisterRequest = (name: string, email: string, password: string
 }
 
 // logout
-export const getLogoutRequest = (accessToken: string, refreshToken: string) => {
+export const getLogoutRequest = (accessToken: string, refreshToken: string): Promise<any> => {
   const options = {
     method: 'POST',
     headers: {
@@ -87,7 +90,7 @@ export const getLogoutRequest = (accessToken: string, refreshToken: string) => {
 }
 
 // token
-export const getTokenRequest = (refreshToken: string) => {
+export const getTokenRequest = (refreshToken: string): Promise<any> => {
   const options = {
     method: 'POST',
     headers: {
@@ -101,7 +104,7 @@ export const getTokenRequest = (refreshToken: string) => {
 }
 
 // get user data
-export const getUserRequest = (accessToken: string) => {
+export const getUserRequest = (accessToken: string): Promise<any> => {
   const options = {
     method: 'GET',
     headers: {
@@ -115,7 +118,7 @@ export const getUserRequest = (accessToken: string) => {
 }
 
 // patch user data
-export const getPatchUserRequest = (accessToken: string, data: any) => {
+export const getPatchUserRequest = (accessToken: string, data: any): Promise<any> => {
   const options = {
     method: 'PATCH',
     headers: {

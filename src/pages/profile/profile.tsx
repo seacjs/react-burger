@@ -1,20 +1,20 @@
 import { Button, Input, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { PagePropsType } from '../../model/page-props-type';
 import { getLogout, getUpdate } from '../../services/actions/authAction';
 import styles from './profile.module.css';
 
-function Profile(props: any) {
+const Profile: FC<PagePropsType> = () => {
     const {user} = useSelector((store: any) => store.auth);
     const dispatch = useDispatch();
     const logout = () => {
         dispatch(getLogout());
     }
 
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setЗassword] = useState('');
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setЗassword] = useState<string>('');
 
     useEffect(() => {
         setName(user?.name);

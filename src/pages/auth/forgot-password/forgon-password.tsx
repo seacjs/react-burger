@@ -1,15 +1,16 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { PagePropsType } from '../../../model/page-props-type';
 import { FORGOT_PASSWORD, getForgotPassword } from '../../../services/actions/authAction';
 import AuthBase from '../auth-base';
 
-function ForgotPassword(props: any) {
+const ForgotPassword: FC<PagePropsType> = () => {
 
     const dispatch = useDispatch();
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState<string>('');
     const forgotPassword = () => {
         dispatch(getForgotPassword(email));
     }

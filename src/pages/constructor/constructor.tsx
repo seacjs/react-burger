@@ -1,17 +1,13 @@
+import { FC } from "react";
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { useDispatch } from "react-redux";
 import BurgerConstructor from "../../components/burger-constructor/burger-constructor"
 import BurgerIngredients from "../../components/burger-ingredients/burger-ingredients"
+import { PagePropsType } from "../../model/page-props-type";
 import styles from './constructor.module.css';
-// import {setTitle} from "../../services/reducers/appReducer";
 
-type propsPage = {
-  pageTitle?: string;
-}
-
-function Constructor(props: propsPage) {
-  const {pageTitle} = props;
+const Constructor: FC<PagePropsType> = ({pageTitle}) => {
 
   const dispatch = useDispatch();
 

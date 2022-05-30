@@ -1,12 +1,12 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { FC, useEffect, useReducer, useRef } from "react";
 import {Tab}  from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientElement from './ingredient-element/ingredient-element';
 import styles from './burger-ingrediends.module.css';
 import { useSelector } from "react-redux";
 import { Ingredient } from "../../model/ingredient";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-function BurgerIngredients() {
+const BurgerIngredients: FC = () => {
 
   const ingredientData = useSelector((store: any) => store.ingredients.items);
   const location = useLocation();

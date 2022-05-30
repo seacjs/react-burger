@@ -1,8 +1,11 @@
+import { FC } from 'react';
 import styles from './auth-base.module.css';
 
+export type TAuthBase = {
+    title: string;
+}
 
-function AuthBase(props: any) {
-    const {title, children} = props;
+const AuthBase: FC<TAuthBase> = ({title, children}) => {
     return (
         <>
             <div className={styles.authFormWrap}>

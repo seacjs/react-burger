@@ -1,7 +1,7 @@
 import AppHeader from '../app-header/app-header';
 // import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 // import BurgerConstructor from '../burger-constructor/burger-constructor';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import styles from './app.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredinets } from '../../services/actions/ingredientsAction';
@@ -18,7 +18,7 @@ import Ingredient from '../../pages/ingredient/Ingredient';
 import {  getUser } from '../../services/actions/authAction';
 import ProtectedRoute from '../protected-route/protected-route';
 
-function App() {
+const App: FC = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {

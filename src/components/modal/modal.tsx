@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import ModalOverlay from '../modal-overlay/modal-overlay'
 import styles from './modal.module.css';
@@ -6,24 +6,20 @@ import {CloseIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
 
 const modalRoot = document.getElementById("modals") as Element;
 
-interface propType {
-  children: any,
+interface IModalPropType {
   title: string,
-  onClose: any,
+  onClose: () => void,
   isOpen: boolean,
   type: string
 }
 
-function Modal(props: propType) {
-
-  const {onClose, title, children, isOpen, type} = props;
+const Modal: FC<IModalPropType> = ({onClose, title, children, isOpen, type} ) => {
 
   const close = () => {
-    // document.removeEventListener("keydown", handleEscapeKey, false);
-    props.onClose();
+    onClose();
   }
 
-  const handleEscapeKey = (event: any) => {
+  const handleEscapeKey = (event: KeyboardEvent) => {
     if(isOpen && event.key === "Escape") {
       close();
     }

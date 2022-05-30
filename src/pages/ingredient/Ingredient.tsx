@@ -5,9 +5,9 @@ import { PagePropsType } from "../../model/page-props-type";
 import { showIngredient } from "../../services/actions/ingredientDetailAction";
 import IngredientDetails from "../../components/ingredient-details/ingredient-details";
 import styles from './ingredient.module.css';
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 
-function Ingredient(props: PagePropsType) {
+const Ingredient: FC<PagePropsType> = () => {
 
     const {id} = useParams();
     const ingredientData = useSelector((store: any) => store.ingredients.items);

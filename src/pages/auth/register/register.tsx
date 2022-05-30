@@ -1,16 +1,17 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { PagePropsType } from '../../../model/page-props-type';
 import { getRegister } from '../../../services/actions/authAction';
 import AuthBase from '../auth-base';
 
-function Register(props: any) {
+const Register: FC<PagePropsType> = () => {
 
     const dispatch = useDispatch();
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setЗassword] = useState('');
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setЗassword] = useState<string>('');
 
     const onClick = () => {
         dispatch(getRegister(name, email, password));

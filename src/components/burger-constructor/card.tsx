@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import type { XYCoord, Identifier } from 'dnd-core';
 
@@ -16,9 +16,16 @@ interface DragItem {
   type: string
 }
 
-function Card(props: any) {
+type propsType = {
+  id: string;
+  index: number;
+  moveCard: (dragIndex: number, hoverIndex: number) => void;
+}
 
-  const { id, index, moveCard, children } = props;
+
+const Card: FC<propsType> = ({ id, index, moveCard, children }) => {
+
+
   const ref = useRef<HTMLDivElement>(null)
   const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
     accept: ItemTypes.CARD,

@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import {Counter, CurrencyIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './ingredient-element.module.css';
-import Modal from '../../modal/modal';
-import IngredientDetails from '../../ingredient-details/ingredient-details'
 import { useDispatch, useSelector } from "react-redux";
-import { CLOSE_DETAIL, OPEN_DETAIL, showIngredient } from "../../../services/actions/ingredientDetailAction";
+import { showIngredient } from "../../../services/actions/ingredientDetailAction";
 import { useDrag } from "react-dnd";
 import { Ingredient } from "../../../model/ingredient";
 import CartIngredient from "../../../model/cartIngredient";
@@ -14,10 +12,9 @@ interface propType  {
   ingridient: Ingredient
 }
 
-function IngredientElement(props: any) {
+const IngredientElement: FC<propType> = ({ingridient} ) => {
 
-  const { image, price, name, calories, proteins, fat, carbohydrates} = props.ingridient;
-  const {ingridient} = props;
+  const { image, price, name, calories, proteins, fat, carbohydrates} = ingridient;
 
   const cart = useSelector((store: any) => store.cart);
   const navigate = useNavigate();

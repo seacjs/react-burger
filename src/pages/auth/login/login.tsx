@@ -1,15 +1,16 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { PagePropsType } from '../../../model/page-props-type';
 import { getLogin } from '../../../services/actions/authAction';
 import AuthBase from '../auth-base';
 
-function Login(props: any) {
+const Login: FC<PagePropsType> = () => {
 
     const dispatch = useDispatch();
-    const [email, setEmail] = useState('');
-    const [password, setЗassword] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setЗassword] = useState<string>('');
 
     const onClick = () => {
         dispatch(getLogin(email, password));
