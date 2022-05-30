@@ -123,7 +123,7 @@ export function getLogin(email: string, password: string) {
             type: LOGIN_SUCCESS,
             user: json.user,
           });
-          setCookie('accessToken', json.accessToken);
+          setCookie('accessToken', json.accessToken, {path: '/'});
           // window.localStorage.setItem('accessToken', json.accessToken);
           window.localStorage.setItem('refreshToken', json.refreshToken);
         } else {
@@ -152,7 +152,7 @@ export function getRegister(name: string, email: string, password: string) {
             type: REGISTER_SUCCESS,
             user: json.user,
           });
-          setCookie('accessToken', json.accessToken);
+          setCookie('accessToken', json.accessToken, {path: '/'});
           // setCookie('refreshToken', json.refreshToken);
           // window.localStorage.setItem('accessToken', json.accessToken);
           window.localStorage.setItem('refreshToken', json.refreshToken);
@@ -218,10 +218,9 @@ export function getToken( action: any, actionParams: any[] = []) {
           dispatch({
             type: TOKEN_SUCCESS,
           });
-          setCookie('accessToken', json.accessToken);
+          setCookie('accessToken', json.accessToken, {path: '/'});
           window.localStorage.setItem('refreshToken', json.refreshToken);
           // ...actionParams
-          console.log('.............   :', ...actionParams);
           dispatch(action(...actionParams));
         } else {
           dispatch({
