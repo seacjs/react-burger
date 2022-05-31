@@ -3,7 +3,7 @@ const baseUrl = 'https://norma.nomoreparties.space/api';
 type TFCheckResponse = (response: Response) => Promise<any>;
 
 
-export const checkResponse: TFCheckResponse = (response: Response) => {
+export const checkResponse: TFCheckResponse = (response) => {
   return response.ok ? response.json() : Promise.reject(response);
 }
 

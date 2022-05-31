@@ -19,7 +19,7 @@ const Register: FC<PagePropsType> = () => {
 
     return (
         <>
-            <AuthBase title={'Регистрация'}>
+            <AuthBase title={'Регистрация'} submit={onClick}>
                 <Input
                     type={'text'}
                     value={name}
@@ -48,7 +48,7 @@ const Register: FC<PagePropsType> = () => {
                     error={false}
                 />
                 
-                <Button type="primary" size="medium" onClick={onClick}>Зарегистрироваться</Button>
+                <Button type="primary" size="medium">Зарегистрироваться</Button>
 
                 <div className="mt-20">
                     <div>Уже зарегистрированы? 

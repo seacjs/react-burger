@@ -18,7 +18,7 @@ const Login: FC<PagePropsType> = () => {
 
     return (
         <>
-            <AuthBase title={'Вход'}>
+            <AuthBase title={'Вход'} submit={onClick}>
 
                 <Input
                     type={'email'}
@@ -39,7 +39,7 @@ const Login: FC<PagePropsType> = () => {
                     error={false}
                 />
                 
-                <Button type="primary" size="medium" onClick={onClick}>Войти</Button>
+                <Button type="primary" size="medium">Войти</Button>
 
                 <div className="mt-20">
                     <div>Вы — новый пользователь? 

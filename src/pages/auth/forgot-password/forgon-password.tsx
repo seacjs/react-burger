@@ -29,7 +29,7 @@ const ForgotPassword: FC<PagePropsType> = () => {
 
     return (
         <>
-            <AuthBase title={'Восстановление пароля'}>
+            <AuthBase title={'Восстановление пароля'} submit={forgotPassword}>
        
                 <Input
                     type={'email'}
@@ -40,7 +40,7 @@ const ForgotPassword: FC<PagePropsType> = () => {
                     error={false}
                 />
 
-                <Button type="primary" size="medium" onClick={forgotPassword}>Восстановить</Button>
+                <Button type="primary" size="medium">Восстановить</Button>
 
                 <div className="mt-20">
                     

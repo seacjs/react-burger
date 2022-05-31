@@ -32,7 +32,7 @@ const ResetPassword: FC<PagePropsType> = () => {
 
     return (
         <>
-            <AuthBase title={'Восстановление пароля'}>
+            <AuthBase title={'Восстановление пароля'} submit={resetPassword}>
        
                 <Input
                     type={'password'}
@@ -53,7 +53,7 @@ const ResetPassword: FC<PagePropsType> = () => {
                     error={false}
                 />
                 
-                <Button type="primary" size="medium" onClick={resetPassword}>Сохранить</Button>
+                <Button type="primary" size="medium">Сохранить</Button>
 
                 <div className="mt-20">
                     <div>Вспомнили пароль? 
