@@ -1,13 +1,15 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { FC, useEffect, useReducer, useRef } from "react";
 import {Tab}  from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientElement from './ingredient-element/ingredient-element';
 import styles from './burger-ingrediends.module.css';
 import { useSelector } from "react-redux";
 import { Ingredient } from "../../model/ingredient";
+import { useLocation } from "react-router-dom";
 
-function BurgerIngredients() {
+const BurgerIngredients: FC = () => {
 
   const ingredientData = useSelector((store: any) => store.ingredients.items);
+  const location = useLocation();
 
   // TABS START
   const initialTabState = {
@@ -108,9 +110,13 @@ function BurgerIngredients() {
                   {
                     ingredientData.filter((item: Ingredient) => item.type === tabState.types[index]).map((ingridient: Ingredient, ingridientIndex: number) => {
                       return (
-                        <IngredientElement key={ingridient._id} 
-                          ingridient={ingridient}
-                        />
+                        // <Link
+                        // key={ingridient._id}
+                        // to={'ingredients/'+ingridient._id}
+                        // state={{backgroundLocation: location}}
+                        // >
+                          <IngredientElement key={ingridient._id} ingridient={ingridient}/>
+                        // </Link>
                       )
                     })
                   }

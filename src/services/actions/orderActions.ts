@@ -18,10 +18,11 @@ export {
 
 export function getCreateOrder(ids: string[]) {
     return function(dispatch: Dispatch<any>) {
+      const accessToken = window.localStorage.getItem('accessToken') as string;
       dispatch({
         type: CREATE_ORDER_REQUEST
       });
-      getCreateOrderRequest(ids).then(json => {
+      getCreateOrderRequest(ids, accessToken).then(json => {
         if (json && json.success) {
             console.log('getCreateOrderRequest json:', json);
           dispatch({

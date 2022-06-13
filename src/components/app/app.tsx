@@ -1,37 +1,75 @@
 import AppHeader from '../app-header/app-header';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import { useEffect } from 'react';
+// import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+// import BurgerConstructor from '../burger-constructor/burger-constructor';
+import { FC, useEffect } from 'react';
 import styles from './app.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredinets } from '../../services/actions/ingredientsAction';
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+// import { DndProvider } from "react-dnd";
+// import { HTML5Backend } from "react-dnd-html5-backend";
+import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
+import Constructor from '../../pages/constructor/constructor';
+import Login from '../../pages/auth/login/login';
+import Register from '../../pages/auth/register/register';
+import ForgotPassword from '../../pages/auth/forgot-password/forgon-password';
+import ResetPassword from '../../pages/auth/reset-password/reset-password';
+import Profile from '../../pages/profile/profile';
+import Ingredient from '../../pages/ingredient/Ingredient';
+import {  getUser } from '../../services/actions/authAction';
+import ProtectedRoute from '../protected-route/protected-route';
 
-function App() {
+const App: FC = () => {
+
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(getIngredinets());
+    dispatch(getUser());
   }, []);
 
   const ingredientData = useSelector((store: any) => store.ingredients.items);
-  
+
+  const Switcher = () => {
+
+    const {islogged, forgotPasswordEmailSended} = useSelector((store: any) => { return store.auth});
+    const location = useLocation();
+    let state = location.state as { backgroundLocation?: Location, from: any };
+
+    // console.log('App, location: ' , location);
+
+    return (
+      <>
+          <div className={styles.App}>
+          <AppHeader />
+          <main>
+          <Routes location={state?.backgroundLocation || location}>
+            <Route path="/" element={<Constructor pageTitle={'Конструктор бургеров'}/>} />
+            <Route path="/login" element={<ProtectedRoute condition={!islogged} redirectTo={state?.from?.pathname || '/' } element={<Login pageTitle={'Страница авторизации'}/>} />} />
+            <Route path="/register" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<Register pageTitle={'Страница регистрации'}/>} />} />
+            <Route path="/forgot-password" element={<ProtectedRoute condition={!islogged} redirectTo={'/'} element={<ForgotPassword pageTitle={'Страница восстановления пароля'}/>} />} />
+            <Route path="/reset-password/:token" element={<ProtectedRoute condition={!islogged && forgotPasswordEmailSended} redirectTo={islogged ? "/" :'/forgot-password'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />} />
+            <Route path="/reset-password" element={<ProtectedRoute condition={!islogged && forgotPasswordEmailSended} redirectTo={islogged ? "/" : '/forgot-password'} element={<ResetPassword pageTitle={'Страница сброса пароля'}/>} />} />
+            <Route path="/profile" element={<ProtectedRoute condition={islogged} redirectTo={'/login'} element={<Profile pageTitle={'Настройки пользователя'}/>} />} />
+
+            <Route path="/ingredients/:id" element={<Ingredient pageTitle={'Страница ингридиента'}/>} />
+          </Routes>
+          </main>
+          </div>
+      </>
+    );
+  }
+
+
+  // const {title} = useSelector((store: any) => store.app);
+  // useEffect(() => {
+  //   document.title = title;
+  // },[title])
+
   return (
-    <div className={styles.App}>
-      <AppHeader />
-      <main>
-      <DndProvider backend={HTML5Backend}>
-        <section className={styles.left}>
-          <BurgerIngredients />
-        </section>
-        <section className={styles.right + ' mt-25'}>
-          <BurgerConstructor />
-        </section>
-      </DndProvider>
-      </main>
-    </div>
+    <Router>
+      <Switcher />
+    </Router>
   );
+
 }
 
 export default App;

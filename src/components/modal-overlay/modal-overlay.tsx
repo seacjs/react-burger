@@ -1,26 +1,26 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styles from './modal-overlay.module.css';
 
 interface propType {
-  onClose: any;
+  onClose: () => void;
   isOpen: boolean;
 }
 
-function ModalOverlay(props: propType) {
+const  ModalOverlay: FC<propType> = ({onClose, isOpen}) => {
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenState, setIsOpenState] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsOpen(props.isOpen);
-  }, [props.isOpen])
+    setIsOpenState(isOpen);
+  }, [isOpen])
 
   const close = () => {
-    props.onClose();
+    onClose();
   }
   
   return (
     <>
-      <div className={styles.modalOverlay + ' ' + (isOpen === true ? styles.isOpen : '')} onClick={close}></div>
+      <div className={styles.modalOverlay + ' ' + (isOpenState === true ? styles.isOpen : '')} onClick={close}></div>
     </>
   );
 }

@@ -1,7 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './app-header-button.module.css';
 
-function AppHeaderButton(props: any) {
+type propsType = {
+  isActive?: boolean;
+  className?: string;
+}
+
+const AppHeaderButton: FC<propsType> = ({isActive, className, children}) => {
 
   const [state, setState] = React.useState({
     className: 'pl-5 pr-5 pb-4 pt-4 ' + styles.button,
@@ -10,13 +15,13 @@ function AppHeaderButton(props: any) {
   useEffect(() => {
     setState({
       ...state,
-      className: state.className + ' ' + props.className + ' ' + (props.isActive ? styles.active : '')
+      className: state.className + ' ' + className + ' ' + (isActive ? styles.active : '')
     })
-  }, [props.isActive])
+  }, [isActive])
 
   return (
     <button className={state.className}>
-      {props.children}
+      {children}
     </button>
   )
 }

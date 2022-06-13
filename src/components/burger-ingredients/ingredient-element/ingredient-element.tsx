@@ -1,35 +1,31 @@
-import React, { useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import {Counter, CurrencyIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './ingredient-element.module.css';
-import Modal from '../../modal/modal';
-import IngredientDetails from '../../ingredient-details/ingredient-details'
 import { useDispatch, useSelector } from "react-redux";
-import { CLOSE_DETAIL, OPEN_DETAIL, showIngredient } from "../../../services/actions/ingredientDetailAction";
+import { showIngredient } from "../../../services/actions/ingredientDetailAction";
 import { useDrag } from "react-dnd";
 import { Ingredient } from "../../../model/ingredient";
 import CartIngredient from "../../../model/cartIngredient";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface propType  {
   ingridient: Ingredient
 }
 
-function IngredientElement(props: any) {
+const IngredientElement: FC<propType> = ({ingridient} ) => {
 
-  const { image, price, name, calories, proteins, fat, carbohydrates} = props.ingridient;
-  const {ingridient} = props;
+  const { image, price, name, calories, proteins, fat, carbohydrates} = ingridient;
 
   const cart = useSelector((store: any) => store.cart);
+  const navigate = useNavigate();
+  const location = useLocation();
+  let stateLcation = location.state as { backgroundLocation?: Location, from: any, ingridientId: any };
 
-  const ingredientDetail = useSelector((store: any) => store.ingredientDetail);
   const dispatch = useDispatch();
 
   const openDetail = () => {
-    console.log('ingridient --- ',ingridient);
+    navigate( `/ingredients/${ingridient._id}`, {state: { backgroundLocation: location, ingridientId: ingridient._id}});
     dispatch(showIngredient(ingridient));
-    
-  }
-  const closeDetail = () => {
-    dispatch({type: CLOSE_DETAIL});
   }
 
   const [{isDrag}, dragRef] = useDrag({
@@ -39,6 +35,15 @@ function IngredientElement(props: any) {
         isDrag: monitor.isDragging()
     })
   });
+
+  useEffect(() => {
+    if(stateLcation && (stateLcation?.backgroundLocation?.pathname !== location?.pathname)) {
+      // navigate( `/ingredients/${ingridient._id}`, {state: { backgroundLocation: stateLcation.backgroundLocation }});
+      if(stateLcation?.ingridientId === ingridient._id) {
+        dispatch(showIngredient(ingridient));
+      }
+    }
+  }, []);
 
 
   return (
@@ -60,9 +65,6 @@ function IngredientElement(props: any) {
           </div>
         </div>
       }
-      <Modal isOpen={ingredientDetail.isOpen} title={'Детали ингредиента'} onClose={closeDetail} type={'ingredinet'}>
-          <IngredientDetails />
-      </Modal>
     </React.Fragment>
   )
 

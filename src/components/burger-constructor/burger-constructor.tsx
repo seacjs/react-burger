@@ -1,27 +1,34 @@
-import React, { useCallback } from "react";
+import React, { FC, useCallback } from "react";
 import {ConstructorElement, DragIcon, Button, CurrencyIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from './../order-details/order-details';
-import { Ingredient } from "../../model/ingredient";
 import { useSelector, useDispatch } from "react-redux";
 import { getCreateOrder, ORDER_CLOSE } from "../../services/actions/orderActions";
 import { useDrop } from "react-dnd";
 import { addIngredient, moveIngredient, removeIngredient } from "../../services/actions/cartActions";
 import Card from "./card";
-import { v4 as uuidv4 } from 'uuid';
 import CartIngredient from "../../model/cartIngredient";
+import { useNavigate } from "react-router-dom";
+import IngredientDetails from "../ingredient-details/ingredient-details";
+import { CLOSE_DETAIL } from "../../services/actions/ingredientDetailAction";
 
-function BurgerConstructor() {
+const BurgerConstructor: FC = () => {
 
   const cartData = useSelector((store: any) => store.cart);
   const order = useSelector((store: any) => store.order);
   const ingredientData = cartData.items;
   const bunIngredient = ingredientData.find((item: CartIngredient) => item.ingredient.type === 'bun')?.ingredient;
   const centerIngredinets = ingredientData.filter((item: CartIngredient)=> item.ingredient.type !== 'bun');
+  const {islogged} = useSelector((store: any) => { return store.auth});
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const openOrder = () => {
+    if(!islogged) {
+      navigate('/login');
+    }
     let ingredientsIds: string[] = [];
     cartData.items.forEach((item: CartIngredient) => {
       ingredientsIds.push(item.ingredient._id);
@@ -48,6 +55,12 @@ function BurgerConstructor() {
   const moveItems = useCallback((dragIndex: number, hoverIndex: number) => {
     dispatch(moveIngredient(dragIndex, hoverIndex));
   }, [dispatch]);
+
+  const ingredientDetail = useSelector((store: any) => store.ingredientDetail);
+  const closeDetail = () => {
+    dispatch({type: CLOSE_DETAIL});
+    navigate('/');
+  }
 
   return (
     <React.Fragment>
@@ -108,6 +121,9 @@ function BurgerConstructor() {
         </div>
       </div>
 
+       <Modal isOpen={ingredientDetail.isOpen} title={'Детали ингредиента'} onClose={closeDetail} type={'ingredinet'}>
+          <IngredientDetails />
+      </Modal>
       <Modal isOpen={order.isOpen} title={''} onClose={closeOrder} type={'order'}>
         <OrderDetails />
       </Modal>
