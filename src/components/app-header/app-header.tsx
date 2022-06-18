@@ -17,14 +17,17 @@ const AppHeader: FC = () => {
   return (
     <header className={styles.header + ' container pt-4 pb-4'}>
       <nav>
+      {/* isActive={true} */}
         <Link to={'/'}>
           <AppHeaderButton isActive={true}>
             <BurgerIcon type="primary" /> <span className="pl-2">Конструктор</span>
           </AppHeaderButton>
         </Link>
-        <AppHeaderButton className={'ml-4'}>
-          <ListIcon type="primary" /> <span className="pl-2">Лента заказов</span>
-        </AppHeaderButton>
+        <Link to={'/feed'} className={'ml-4'}>
+          <AppHeaderButton className={'ml-4'}>
+            <ListIcon type="primary" /> <span className="pl-2">Лента заказов</span>
+          </AppHeaderButton>
+        </Link>
       </nav>
       <Logo />
       <nav>

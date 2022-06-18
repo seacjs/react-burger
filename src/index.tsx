@@ -7,8 +7,11 @@ import rootReducer from './services/reducers/rootReducer';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { socketMiddleware } from './services/middleware/socket-middleware';
+import {wsActions} from './services/actions/wsOrderAction'
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+
+const store = createStore(rootReducer, applyMiddleware(thunk, socketMiddleware(wsActions)));
 
 ReactDOM.render(
   <React.StrictMode>
