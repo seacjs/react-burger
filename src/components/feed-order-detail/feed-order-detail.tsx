@@ -18,14 +18,15 @@ const FeedOrderDetail: FC = () => {
     useEffect(() => {
         let ing: Ingredient[] = [];
         let price = 0;
-        order.ingredients.forEach((id: string) => {
-            const findedIngredient = ingredientData.find((i: Ingredient) => i._id === id);
-            if (findedIngredient) {
-                ing.push(findedIngredient);
-                price += findedIngredient.price;
-            }
-        })
-
+        if (order?.ingredients.length) {
+            order.ingredients.forEach((id: string) => {
+                const findedIngredient = ingredientData.find((i: Ingredient) => i._id === id);
+                if (findedIngredient) {
+                    ing.push(findedIngredient);
+                    price += findedIngredient.price;
+                }
+            })
+        }
         setIngredients(ing);
         setTotalPrice(price);
     },[order]);
