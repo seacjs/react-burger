@@ -35,7 +35,7 @@ export const socketMiddleware = (wsActions: any) => {
             const parsedData = JSON.parse(data);
             const { success, ...restParsedData } = parsedData;
             // todo: if not suceess ...
-            console.log('socket.onmessage', restParsedData);
+            console.log('socket.onmessage', parsedData, event);
             dispatch(wsGetMessage(restParsedData));
           };
   

@@ -21,7 +21,6 @@ type PagePropsType = {
 
 const Profile: FC<PagePropsType> = ({tab}) => {
 
-    const feedOrderDetail = useSelector((store: any) => store.feedOrderDetail);
     const [current, setCurrent] = useState(tab ? tab : 'one');
     const navigate = useNavigate();
     // user data
@@ -30,17 +29,14 @@ const Profile: FC<PagePropsType> = ({tab}) => {
     const logout = () => {
         dispatch(getLogout());
     }
-
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setЗassword] = useState<string>('');
-
     useEffect(() => {
         setName(user?.name);
         setEmail(user?.email);
         setЗassword('');
     },[user])
-
     const update = () => {
         dispatch(getUpdate(name, email, password));
     } 
@@ -51,17 +47,21 @@ const Profile: FC<PagePropsType> = ({tab}) => {
     } 
 
     // orders
+    const feedOrderDetail = useSelector((store: any) => store.feedOrderDetail);
     const wsOrders = useSelector((store: any) => store.wsOrders); //  feedOrders {orders , total, totalToday }
     const {orders, total, totalToday} = wsOrders;
 
     useEffect(() => {
-        const accessToken = (getCookie('accessToken') as string).replace('Bearer ', '');
-        const url = accessToken ? `${wsUrl}?token=${accessToken}` : wsUrl;
-        dispatch(wsInit(url));
+        if (current === 'orders') {
+            console.log('current', current);
+            const accessToken = (getCookie('accessToken') as string).replace('Bearer ', '');
+            const url = accessToken ? `${wsUrl}?token=${accessToken}` : wsUrl;
+            dispatch(wsInit(url));
+        }
         return () => {
             dispatch(wsClose());
         }
-    },[]);
+    },[current]);
 
     const closeDetail = () => {
         dispatch(hideFeedOrderDetail());
@@ -75,7 +75,7 @@ const Profile: FC<PagePropsType> = ({tab}) => {
                     <Tab value="one" active={current === 'one'} onClick={setCurrent}>
                         Профилоь
                     </Tab>
-                    <Tab value="two" active={current === 'two'} onClick={setCurrent}>
+                    <Tab value="orders" active={current === 'orders'} onClick={setCurrent}>
                         История заказов
                     </Tab>
                     <Tab value="three" active={false} onClick={logout}>
@@ -130,7 +130,7 @@ const Profile: FC<PagePropsType> = ({tab}) => {
                         </div>
                     </> 
                 )}
-                {current === 'two' && (
+                {current === 'orders' && (
                     <>
                         <div className={styles.ordersContainer + ' pr-2'}>
                             {
