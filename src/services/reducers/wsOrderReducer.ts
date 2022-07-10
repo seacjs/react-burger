@@ -7,7 +7,7 @@ import {
   } from '../constants/wsOrder';
 import { TwsOrderActions } from '../actions/wsOrderAction';
   
-  type initialStateType = {
+  export type TwsOrdersReducerInitialState = {
     wsConnected: boolean;
     orders: TOrder[];
     total: number;
@@ -21,7 +21,7 @@ import { TwsOrderActions } from '../actions/wsOrderAction';
     orders: []
   };
   
-  export const wsOrdersReducer = (state: initialStateType = initialState, action: TwsOrderActions) => {
+  export const wsOrdersReducer = (state: TwsOrdersReducerInitialState = initialState, action: TwsOrderActions): TwsOrdersReducerInitialState => {
     switch (action.type) {
       case WS_CONNECTION_SUCCESS:
         return {
@@ -49,8 +49,6 @@ import { TwsOrderActions } from '../actions/wsOrderAction';
         };
   
       case WS_GET_MESSAGE:
-        // todo-remove:
-        console.log('---', action);
         return {
           ...state,
           total: action.payload.total,

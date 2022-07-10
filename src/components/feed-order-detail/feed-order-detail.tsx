@@ -2,7 +2,6 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Ingredient } from '../../model/ingredient';
-import { TOrder } from '../types/order';
 import styles from './feed-order-detail.module.css';
 import {v4 as uuidv4} from 'uuid';
 

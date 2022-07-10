@@ -21,8 +21,8 @@ const OrderItem: FC<propType>  = ({order, profile}) => {
     const location = useLocation();
 
     const openDetail = () => {
-        const nav = !profile ? `/feed/${order._id}` : `/profile/orders/${order._id}`;
-        navigate( nav, {state: { backgroundLocation: location, orderId: order._id}});
+        const nav = !profile ? `/feed/${order.number}` : `/profile/orders/${order.number}`;
+        navigate( nav, {state: { backgroundLocation: location, orderId: order.number}});
         dispatch(showFeedOrderDetail(order, true));
     }
 
@@ -40,7 +40,6 @@ const OrderItem: FC<propType>  = ({order, profile}) => {
                 price += findedIngredient.price;
             }
         })
-
         setIngredients(ing);
         setTotalPrice(price);
     },[]);

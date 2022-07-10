@@ -8,15 +8,6 @@ import {
     WS_SEND_MESSAGE
 } from '../constants/wsOrder';
 
-// export const wsActions = {
-//   wsInit: WS_CONNECTION_START,
-//   wsSendMessage: WS_SEND_MESSAGE,
-//   onOpen: WS_CONNECTION_SUCCESS,
-//   onClose: WS_CONNECTION_CLOSED,
-//   onError: WS_CONNECTION_ERROR,
-//   onMessage: WS_GET_MESSAGE
-// };
-
 export interface IwsConnectionInit {
   readonly type: typeof WS_CONNECTION_START;
   readonly wsUrl: string;
@@ -100,7 +91,9 @@ export type TwsOrderActions = IwsConnectionInit
       payload: message
     };
   };
-  
+
+
+
   export const wsActions = {
     wsInit,
     wsClose,
@@ -110,3 +103,4 @@ export type TwsOrderActions = IwsConnectionInit
     wsGetMessage,
     wsSendMessage
   }
+  export type wsAllActions = typeof wsActions;

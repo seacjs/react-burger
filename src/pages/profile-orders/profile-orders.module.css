@@ -1,6 +1,5 @@
 .profileContent {
     display: flex;
-
 }
 .links {
     display: flex;
@@ -14,10 +13,8 @@
     padding-left: 0px;
     padding-right: auto;
 }
-
-.form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+.ordersContainer {
+    height: calc(100vh - 220px);
+    overflow: auto;
+    width: 844px;
 }

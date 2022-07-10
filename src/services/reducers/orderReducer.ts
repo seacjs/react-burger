@@ -1,5 +1,5 @@
 import { Order } from './../../model/order';
-import { CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, CREATE_ORDER_FAILED, ORDER_OPEN, ORDER_CLOSE } from '../actions/orderActions';
+import { CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, CREATE_ORDER_FAILED, ORDER_OPEN, ORDER_CLOSE } from '../constants/order';
 
 interface initialStateOrder {
   order: Order | null,
@@ -15,7 +15,7 @@ const initialState: initialStateOrder = {
   isOpen: false
 }
 
-const orderReducer = (state: initialStateOrder = initialState, action: any): any => {
+const feedOrderDetailReducer = (state: initialStateOrder = initialState, action: any): any => {
   switch (action.type) {
     case CREATE_ORDER_REQUEST: {
       return {
@@ -55,4 +55,4 @@ const orderReducer = (state: initialStateOrder = initialState, action: any): any
   }
 }
 
-export default orderReducer;
+export default feedOrderDetailReducer;
