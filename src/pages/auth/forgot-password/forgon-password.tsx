@@ -19,7 +19,8 @@ const ForgotPassword: FC<PagePropsType> = () => {
     const {forgotPasswordEmailSended} = useSelector((store: any) =>store.auth);
 
     useEffect(() => {
-        dispatch({type: FORGOT_PASSWORD});
+        dispatch(getForgotPassword(email));
+        console.log('forgotPasswordEmailSended', forgotPasswordEmailSended);
         if(forgotPasswordEmailSended) {
             navigate('/reset-password');
         }

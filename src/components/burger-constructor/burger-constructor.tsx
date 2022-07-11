@@ -4,7 +4,7 @@ import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from './../order-details/order-details';
 import { useSelector, useDispatch } from "react-redux";
-import { getCreateOrder, ORDER_CLOSE } from "../../services/actions/orderActions";
+import { getCreateOrder } from "../../services/actions/orderActions";
 import { useDrop } from "react-dnd";
 import { addIngredient, moveIngredient, removeIngredient } from "../../services/actions/cartActions";
 import Card from "./card";
@@ -12,6 +12,7 @@ import CartIngredient from "../../model/cartIngredient";
 import { useNavigate } from "react-router-dom";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import { CLOSE_DETAIL } from "../../services/actions/ingredientDetailAction";
+import { ORDER_CLOSE } from "../../services/constants/order";
 
 const BurgerConstructor: FC = () => {
 

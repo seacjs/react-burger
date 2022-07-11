@@ -12,6 +12,30 @@ export const getIngredientsRequest = () => {
     .then(checkResponse);
 };
 
+export const getOrderRequest = (id: string, accessToken: string | null = null): Promise<any> => {
+  console.log('accessToken', accessToken);
+  let options;
+  if (accessToken) {
+    options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': accessToken
+      }
+    };
+  } else {
+    options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+  }
+
+  return fetch(`${baseUrl}/orders/${id}`, options)
+    .then(checkResponse);
+};
+
 export const getCreateOrderRequest = (ids: string[], accessToken: string): Promise<any> => {
   const options = {
     method: 'POST',

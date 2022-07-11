@@ -44,7 +44,6 @@ const initialState = {
 
 const authReducer = (state: initialStateType = initialState, action: any): any => {
   switch (action.type) {
-
       // FORGOT_PASSWORD
       case FORGOT_PASSWORD: {
         return {

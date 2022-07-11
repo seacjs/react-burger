@@ -17,6 +17,10 @@ import Profile from '../../pages/profile/profile';
 import Ingredient from '../../pages/ingredient/Ingredient';
 import {  getUser } from '../../services/actions/authAction';
 import ProtectedRoute from '../protected-route/protected-route';
+import FeedOrders from '../../pages/feed-orders/feed-orders';
+import FeedOrder from '../../pages/feed-order/feed-order';
+import ProfileOrders from '../../pages/profile-orders/profile-orders';
+import ProfileOrder from '../../pages/profile-order/profile-order';
 
 const App: FC = () => {
 
@@ -51,6 +55,12 @@ const App: FC = () => {
             <Route path="/profile" element={<ProtectedRoute condition={islogged} redirectTo={'/login'} element={<Profile pageTitle={'Настройки пользователя'}/>} />} />
 
             <Route path="/ingredients/:id" element={<Ingredient pageTitle={'Страница ингридиента'}/>} />
+
+            <Route path="/feed" element={<FeedOrders/>} />
+            <Route path="/feed/:id" element={<FeedOrder pageTitle={'Страница заказа в ленте'}/>} />
+            <Route path="/profile/orders" element={<ProtectedRoute condition={islogged} redirectTo={'/login'} element={<ProfileOrders pageTitle={'Страница истории заказов'}/>} />} />
+            <Route path="/profile/orders/:id" element={<ProtectedRoute condition={islogged} redirectTo={'/login'} element={<ProfileOrder pageTitle={'Страница заказа в истории заказов'}/>} />} />
+
           </Routes>
           </main>
           </div>

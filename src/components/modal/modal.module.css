@@ -18,6 +18,10 @@
   height: 560px;
   top: calc((100vh - 640px) / 2);
 }
+.modalFeedOrder {
+  height: 560px;
+  top: calc((100vh - 640px) / 2);
+}
 svg {
   cursor: pointer;
 }

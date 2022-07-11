@@ -1,6 +1,7 @@
 import styles from './order-details.module.css';
 import imageSrc from '../../images/done.png';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 
 const OrderDetails = () => {

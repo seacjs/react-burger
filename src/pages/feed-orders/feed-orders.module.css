@@ -1,0 +1,27 @@
+.pageWrap {
+    text-align: left;
+}
+.flexWrap {
+    display: flex;
+    gap: 60px;
+    text-align: left;
+}
+.flexWrap .w50 {
+    width: 50%;
+}
+.ordersContainer {
+    height: calc(100vh - 220px);
+    overflow: auto;
+}
+.orderNumbersWithStatuses {
+    display: flex;
+    gap: 36px;
+}
+.orderNumbersWithStatuses .doneStatus {
+    color: #00CCCC;
+}
+.ordersNumbers {
+	column-count: 2;
+	column-gap: 8px;
+}
+
