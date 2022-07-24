@@ -1,13 +1,13 @@
 import {Logo, BurgerIcon, ListIcon, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import { FC, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import AppHeaderButton from './app-header-button/app-header-button';
 import styles from './app-header.module.css';
+import { useSelector } from '../../hooks/hooks';
 
 const AppHeader: FC = () => {
 
-  const {user} = useSelector((store: any) => store.auth);
+  const {user} = useSelector(store => store.auth);
   let [username, setUsername] = useState<string>('');
 
   useEffect(() => {

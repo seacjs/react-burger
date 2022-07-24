@@ -1,10 +1,11 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { FC, useEffect } from 'react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from '../../../hooks/hooks';
 import { PagePropsType } from '../../../model/page-props-type';
-import { FORGOT_PASSWORD, getForgotPassword } from '../../../services/actions/authAction';
+import { getForgotPassword } from '../../../services/actions/authAction';
 import AuthBase from '../auth-base';
 
 const ForgotPassword: FC<PagePropsType> = () => {
@@ -12,15 +13,19 @@ const ForgotPassword: FC<PagePropsType> = () => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState<string>('');
     const forgotPassword = () => {
-        dispatch(getForgotPassword(email));
+        if (email !== '') {
+            dispatch(getForgotPassword(email));
+        }
     }
     const navigate = useNavigate();
 
-    const {forgotPasswordEmailSended} = useSelector((store: any) =>store.auth);
+    const {forgotPasswordEmailSended} = useSelector(store =>store.auth);
 
     useEffect(() => {
-        dispatch(getForgotPassword(email));
         console.log('forgotPasswordEmailSended', forgotPasswordEmailSended);
+        if(email !== '') {
+            dispatch(getForgotPassword(email));
+        }
         if(forgotPasswordEmailSended) {
             navigate('/reset-password');
         }

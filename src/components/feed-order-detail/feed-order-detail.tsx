@@ -1,16 +1,16 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { FC, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Ingredient } from '../../model/ingredient';
 import styles from './feed-order-detail.module.css';
 import {v4 as uuidv4} from 'uuid';
+import { useSelector } from '../../hooks/hooks';
 
 const FeedOrderDetail: FC = () => {
 
-    const {order} = useSelector((store: any) => store.feedOrderDetail);
+    const {order} = useSelector(store=> store.feedOrderDetail);
 
 
-    const ingredientData = useSelector((store: any) => store.ingredients.items);
+    const ingredientData = useSelector(store => store.ingredients.items);
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
@@ -22,7 +22,7 @@ const FeedOrderDetail: FC = () => {
                 const findedIngredient = ingredientData.find((i: Ingredient) => i._id === id);
                 if (findedIngredient) {
                     ing.push(findedIngredient);
-                    price += findedIngredient.price;
+                    price += findedIngredient.price * (findedIngredient.type === 'bun' ?  2  : 1);
                 }
             })
         }

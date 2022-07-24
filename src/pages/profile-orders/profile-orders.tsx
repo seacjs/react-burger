@@ -1,6 +1,6 @@
 import { Button, Input, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { FC, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import OrderItem from '../../components/order-item/order-item';
 import { getLogout, getUpdate } from '../../services/actions/authAction';
 import { wsClose, wsInit } from '../../services/actions/wsOrderAction';
@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import FeedOrderDetail from '../../components/feed-order-detail/feed-order-detail';
 import Modal from '../../components/modal/modal';
 import { RootState } from '../../services/reducers/rootReducer';
+import { useDispatch, useSelector } from '../../hooks/hooks';
 
 const wsUrl = 'wss://norma.nomoreparties.space/orders';
 
@@ -27,15 +28,15 @@ const ProfileOrders: FC<PagePropsType> = () => {
     const navigate = useNavigate();
     
     // user data
-    const {user} = useSelector((store: any) => store.auth);
+    const {user} = useSelector(store => store.auth);
     const dispatch = useDispatch();
     const logout = () => {
         dispatch(getLogout());
     }
 
     // orders
-    const feedOrderDetail = useSelector((store: RootState) => store.feedOrderDetail);
-    const wsOrders = useSelector((store: RootState) => store.wsOrders); // feedOrders {orders , total, totalToday }
+    const feedOrderDetail = useSelector(store => store.feedOrderDetail);
+    const wsOrders = useSelector(store => store.wsOrders); // feedOrders {orders , total, totalToday }
     const {orders, total, totalToday} = wsOrders;
 
     useEffect(() => {
@@ -76,7 +77,7 @@ const ProfileOrders: FC<PagePropsType> = () => {
                         {
                             
                             orders && 
-                            orders.map((order: any) => {
+                            orders.map((order) => {
                                 return (
                                     <OrderItem key={uuidv4()} order={order} profile={true} />
                                 )

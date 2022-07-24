@@ -10,7 +10,7 @@ export const socketMiddleware = (wsActions: wsAllActions): Middleware  => {
       return (next: (a: TwsOrderActions) => void) => (action: TwsOrderActions) => {
         const { dispatch } = store;
         const { type } = action;
-
+        
         const { 
             wsConnectionSuccess,
             wsConnectionError,

@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from 'react';
 import OrderItem from '../../components/order-item/order-item';
 import {v4 as uuidv4} from 'uuid';
 import Modal from '../../components/modal/modal';
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { hideFeedOrderDetail, showFeedOrderDetail } from '../../services/actions/feedOrderDetailActions';
 import FeedOrderDetail from '../../components/feed-order-detail/feed-order-detail';
@@ -10,6 +9,7 @@ import { wsInit, wsClose } from './../../services/actions/wsOrderAction';
 import { TOrder } from '../../components/types/order';
 import { getCookie } from '../../utils/cookie';
 import styles from './feed-orders.module.css';
+import { useSelector, useDispatch } from '../../hooks/hooks';
 
 const wsUrl = 'wss://norma.nomoreparties.space/orders/all';
 
@@ -21,10 +21,10 @@ const FeedOrders: FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    const feedOrderDetail = useSelector((store: any) => store.feedOrderDetail);
-    const wsOrders = useSelector((store: any) => store.wsOrders); //  feedOrders {orders , total, totalToday }
+    const feedOrderDetail = useSelector(store => store.feedOrderDetail);
+    const wsOrders = useSelector(store => store.wsOrders); //  feedOrders {orders , total, totalToday }
     const {orders, total, totalToday} = wsOrders;
-    let stateLcation = location.state as { backgroundLocation?: Location, from: any, orderId: any };
+    let stateLcation = location.state as { backgroundLocation?: Location, from: any, orderId: string };
 
     useEffect(() => {
         dispatch(wsInit(wsUrl));
@@ -33,13 +33,13 @@ const FeedOrders: FC = () => {
         }
     },[]);
 
-    const [doneStatuses, setDoneStatuses] = useState<any[]>([]);
-    const [otherStatuses, setOtherStatuses] = useState<any[]>([]);
+    const [doneStatuses, setDoneStatuses] = useState<number[]>([]);
+    const [otherStatuses, setOtherStatuses] = useState<number[]>([]);
 
     useEffect(() => {
         console.log('ws', wsOrders);
-        let doneStatusesArray: any[] = [];
-        let otherStatusesArray: any[] = [];
+        let doneStatusesArray: number[] = [];
+        let otherStatusesArray: number[] = [];
         orders.forEach((order: TOrder) => {
             if(order.status === 'done') {
                 if(doneStatusesArray.length < 10) {
@@ -69,7 +69,7 @@ const FeedOrders: FC = () => {
                         {
                             
                             wsOrders && 
-                            orders.map((order: any) => {
+                            orders.map((order) => {
                                 return (
                                     <OrderItem key={uuidv4()} order={order} />
                                 )

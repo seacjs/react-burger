@@ -1,9 +1,9 @@
 import { Button, Input, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { FC, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { getLogout, getUpdate } from '../../services/actions/authAction';
 import styles from './profile.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from '../../hooks/hooks';
 
 type PagePropsType = {
     pageTitle?: string;
@@ -17,7 +17,7 @@ const Profile: FC<PagePropsType> = () => {
     const [current, setCurrent] = useState(TAB_PROFILE);
     const navigate = useNavigate();
     // user data
-    const {user} = useSelector((store: any) => store.auth);
+    const {user} = useSelector(store => store.auth);
     const dispatch = useDispatch();
     const logout = () => {
         dispatch(getLogout());
@@ -26,16 +26,22 @@ const Profile: FC<PagePropsType> = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setЗassword] = useState<string>('');
     useEffect(() => {
-        setName(user?.name);
-        setEmail(user?.email);
+        if(user) {
+            setName(user.name);
+            setEmail(user.email);
+        }
         setЗassword('');
     },[user])
     const update = () => {
-        dispatch(getUpdate(name, email, password));
+        if(name && email && password) {
+            dispatch(getUpdate(name, email, password));
+        }
     } 
     const cancel = () => {
-        setName(user?.name);
-        setEmail(user?.email);
+        if(user) {
+            setName(user.name);
+            setEmail(user.email);
+        }
         setЗassword('');
     } 
 

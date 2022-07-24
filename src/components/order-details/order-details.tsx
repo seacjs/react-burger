@@ -1,12 +1,10 @@
 import styles from './order-details.module.css';
 import imageSrc from '../../images/done.png';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
-
+import { useSelector } from '../../hooks/hooks';
 
 const OrderDetails = () => {
 
-  const {order} = useSelector((store: any) => store.order);
+  const {order} = useSelector(store => store.order);
 
   return (
     <>

@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../hooks/hooks';
 import styles from './ingredient-details.module.css'
 
 const IngredientDetails: FC = () => {
-  const ingredient = useSelector((store: any) => store.ingredientDetail.ingredient);
+  const ingredient = useSelector(store => store.ingredientDetail.ingredient);
 
   const energyМalues = ['calories', 'proteins', 'fat', 'carbohydrates'];
   const energyМaluesNames = ['Калории,ккал', 'Белки, г', 'Жиры, г', 'Углеводы, г'];

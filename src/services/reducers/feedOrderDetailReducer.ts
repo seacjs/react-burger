@@ -6,11 +6,12 @@ import {
   OPEN_FEED_DETAIL,
   CLOSE_FEED_DETAIL
 } from '../constants/feedOrderDetail';
+import { TFeedOrderDetailctions } from '../actions/feedOrderDetailActions';
 
 interface initialStateFeedOrderDetailReduser {
     order: TOrder | null,
-    orderRequest: false,
-    orderFailed: false
+    orderRequest: boolean,
+    orderFailed: boolean
     isOpen: boolean
   }
   
@@ -21,7 +22,7 @@ interface initialStateFeedOrderDetailReduser {
     orderFailed: false
   }
 
-const feedOrderDetailReduser = (state: initialStateFeedOrderDetailReduser = initialState, action: any): any => {
+const feedOrderDetailReduser = (state: initialStateFeedOrderDetailReduser = initialState, action: TFeedOrderDetailctions): initialStateFeedOrderDetailReduser => {
     switch (action.type) {
       case GET_ORDER_REQUEST: {
         return {

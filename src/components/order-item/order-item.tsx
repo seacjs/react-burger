@@ -4,9 +4,9 @@ import styles from './order-item.module.css';
 import {v4 as uuidv4} from 'uuid';
 import { TOrder } from '../types/order';
 import { hideFeedOrderDetail, showFeedOrderDetail } from '../../services/actions/feedOrderDetailActions';
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useSelector, useDispatch } from '../../hooks/hooks';
 
 
 type propType = {
@@ -26,7 +26,7 @@ const OrderItem: FC<propType>  = ({order, profile}) => {
         dispatch(showFeedOrderDetail(order, true));
     }
 
-    const ingredientData = useSelector((store: any) => store.ingredients.items);
+    const ingredientData = useSelector(store => store.ingredients.items);
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
@@ -37,7 +37,7 @@ const OrderItem: FC<propType>  = ({order, profile}) => {
             const findedIngredient = ingredientData.find((i: Ingredient) => i._id === id);
             if (findedIngredient) {
                 ing.push(findedIngredient);
-                price += findedIngredient.price;
+                price += findedIngredient.price * (findedIngredient.type === 'bun' ?  2  : 1);
             }
         })
         setIngredients(ing);

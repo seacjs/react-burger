@@ -1,3 +1,4 @@
+import { AppThunk } from './../reducers/rootReducer';
 import { getOrderRequest } from './../../api/requests';
 import { TOrder } from './../../components/types/order';
 import { 
@@ -31,49 +32,46 @@ export interface IHideFeedOrderDetail {
 }
 
 export type TFeedOrderDetailctions = 
-    | IFeedOrderDetailRequest
-    | IFeedOrderDetailSuccess
-    | IFeedOrderDetailFailed
-    | IShowFeedOrderDetail
-    | IHideFeedOrderDetail;
+  | IFeedOrderDetailRequest
+  | IFeedOrderDetailSuccess
+  | IFeedOrderDetailFailed
+  | IShowFeedOrderDetail
+  | IHideFeedOrderDetail;
 
+export const feedOrderDetailRequest = ():IFeedOrderDetailRequest => ({
+  type: GET_ORDER_REQUEST
+})
+export const feedOrderDetailSuccess = (order: TOrder):IFeedOrderDetailSuccess => ({
+  type: GET_ORDER_SUCCESS,
+  order
+})
+export const feedOrderDetailFailed = ():IFeedOrderDetailFailed => ({
+  type: GET_ORDER_FAILED
+})
 export const showFeedOrderDetail = (order: TOrder, isOpen: boolean): IShowFeedOrderDetail => ({
     type: OPEN_FEED_DETAIL,
     isOpen: isOpen,
     order: order
 });
-
 export const hideFeedOrderDetail = (): IHideFeedOrderDetail => ({
     type: CLOSE_FEED_DETAIL,
     isOpen: false,
 });
 
-export function getFeedOrderDetail(id: string) {
-    return function(dispatch: Dispatch<any>) {
-      const accessToken = getCookie('accessToken') as string;
-      dispatch({
-        type: GET_ORDER_REQUEST
-      });
-      getOrderRequest(id, accessToken).then(json => {
-        if (json && json.success) {
-            console.log('getOrderRequest json:', json.orders[0]);
-          dispatch({
-            type: GET_ORDER_SUCCESS,
-            order:json.orders[0]
-          });
-          dispatch({
-            type: OPEN_FEED_DETAIL,
-          });
-        } else {
-          dispatch({
-            type: GET_ORDER_FAILED
-          });
-        }
-      }).catch(error => {
-          console.log('error', error);
-          dispatch({
-            type: GET_ORDER_FAILED
-          });
-      });
-    };
-  }
+export type TgetFeedOrderDetail = (id: string) =>  AppThunk;
+export const getFeedOrderDetail: TgetFeedOrderDetail = (id: string): AppThunk => (dispatch: Dispatch<TFeedOrderDetailctions>) => {
+  const accessToken = getCookie('accessToken') as string;
+  dispatch(feedOrderDetailRequest());
+  getOrderRequest(id, accessToken).then(json => {
+    if (json && json.success) {
+        console.log('getOrderRequest json:', json.orders[0]);
+        dispatch(feedOrderDetailSuccess(json.orders[0]));
+        dispatch(showFeedOrderDetail(json.orders[0], true));
+    } else {
+      dispatch(feedOrderDetailFailed());
+    }
+  }).catch(error => {
+      console.log('error', error);
+      dispatch(feedOrderDetailFailed());
+  });
+}
