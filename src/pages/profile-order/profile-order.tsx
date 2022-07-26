@@ -19,7 +19,6 @@ const ProfileOrder: FC<PagePropsType> = () => {
     useEffect(() => {
         if(order) {
             dispatch(showFeedOrderDetail(order, false));
-            console.log('useEffect', order);
         }
     }, [order]);
 

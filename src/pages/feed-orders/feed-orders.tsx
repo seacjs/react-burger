@@ -24,7 +24,7 @@ const FeedOrders: FC = () => {
     const feedOrderDetail = useSelector(store => store.feedOrderDetail);
     const wsOrders = useSelector(store => store.wsOrders); //  feedOrders {orders , total, totalToday }
     const {orders, total, totalToday} = wsOrders;
-    let stateLcation = location.state as { backgroundLocation?: Location, from: any, orderId: string };
+    // let stateLcation = location.state as { backgroundLocation?: Location, from: any, orderId: string };
 
     useEffect(() => {
         dispatch(wsInit(wsUrl));
@@ -58,8 +58,9 @@ const FeedOrders: FC = () => {
     const closeDetail = () => {
         dispatch(hideFeedOrderDetail());
         navigate('/feed');
+        console.log('closed');
     }
-    
+
     return (
         <div className={styles.pageWrap}>
             <div className='text text_type_main-large pb-10'>Лента заказов</div>

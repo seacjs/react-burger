@@ -22,6 +22,7 @@ import ProfileOrders from '../../pages/profile-orders/profile-orders';
 
 import { useSelector, useDispatch } from '../../hooks/hooks';
 import { getCookie } from '../../utils/cookie';
+import ProfileOrder from '../../pages/profile-order/profile-order';
 
 const App: FC = () => {
 
@@ -45,6 +46,11 @@ const App: FC = () => {
     const accessToken = getCookie('accessToken') as string;
     console.log('Check accessToken and refreshToken:', refreshToken, accessToken);
 
+    const test = state && (state?.backgroundLocation?.pathname === location?.pathname);
+    console.log('test', test);
+    console.log('isLogged', isLogged);
+
+
     return (
       <>
           <div className={styles.App}>
@@ -64,8 +70,7 @@ const App: FC = () => {
             <Route path="/feed" element={<FeedOrders/>} />
             <Route path="/feed/:id" element={<FeedOrder pageTitle={'Страница заказа в ленте'}/>} />
             <Route path="/profile/orders" element={<ProtectedRoute condition={isLogged} redirectTo={'/login'} element={<ProfileOrders pageTitle={'Страница истории заказов'}/>} />} />
-            <Route path="/profile/orders/:id" element={<ProtectedRoute condition={isLogged} redirectTo={'/login'} element={<ProfileOrders pageTitle={'Страница заказа в истории заказов'}/>} />} />
-
+            <Route path="/profile/orders/:id" element={<ProtectedRoute condition={isLogged} redirectTo={'/login'} element={<ProfileOrder pageTitle={'Страница заказа в истории заказов'}/>} />} />
           </Routes>
           </main>
           </div>

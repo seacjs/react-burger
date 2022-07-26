@@ -15,12 +15,17 @@ type propType = {
 }
 
 const OrderItem: FC<propType>  = ({order, profile}) => {
+    console.log('А ну ка, кто тут у нас? Авторизованый?',profile);
+
     const maxIngredientCount = 6;
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-
+    
+    const {isOpen} = useSelector(store=> store.feedOrderDetail);
+    let stateLcation = location.state as { backgroundLocation?: Location, from: any, orderId: any };
     const openDetail = () => {
+        console.log('open');
         const nav = !profile ? `/feed/${order.number}` : `/profile/orders/${order.number}`;
         navigate( nav, {state: { backgroundLocation: location, orderId: order.number}});
         dispatch(showFeedOrderDetail(order, true));
@@ -30,7 +35,21 @@ const OrderItem: FC<propType>  = ({order, profile}) => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
+    
     useEffect(() => {
+        console.log('О божечки, что происходит!?!');
+
+        if(stateLcation && (stateLcation?.backgroundLocation?.pathname !== location?.pathname)) {
+        console.log('location',  stateLcation, order.number, stateLcation?.orderId === order.number);
+
+            if(stateLcation?.orderId === order.number) {
+                console.log('isOpen',  isOpen);
+                if(!isOpen) {
+                    dispatch(showFeedOrderDetail(order, true));
+                }
+            }
+        }
+
         let ing: Ingredient[] = [];
         let price = 0;
         order.ingredients.forEach(id => {
@@ -42,7 +61,7 @@ const OrderItem: FC<propType>  = ({order, profile}) => {
         })
         setIngredients(ing);
         setTotalPrice(price);
-    },[]);
+    },[isOpen]);
 
     return (
         <div className={styles.orderItem + ' pt-6 pb-6 pl-6 pr-6 mb-4'} onClick={openDetail}>

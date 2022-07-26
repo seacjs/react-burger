@@ -20,9 +20,7 @@ const FeedOrder: FC<PagePropsType> = () => {
     useEffect(() => {
         if(order) {
             dispatch(showFeedOrderDetail(order, false));
-            console.log('useEffect', order);
         }
-        console.log('useEffect order', order);
     }, [order]);
 
     return (
