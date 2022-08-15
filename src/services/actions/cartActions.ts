@@ -1,37 +1,38 @@
+import CartIngredient from '../../model/cartIngredient';
 import { Ingredient } from '../../model/ingredient';
-
-const ADD_INGREDIENT = 'ADD_INGREDIENT';
-const REMOVE_INGREDIENT = 'REMOVE_INGREDIENT';
-const MOVE_INGREDINET = 'MOVE_INGREDINET';
-
-const addIngredient = (ingredient: Ingredient) => {
-    return {
-        type: ADD_INGREDIENT,
-        ingredient: ingredient
-    }
-} 
-
-const removeIngredient = (index: number) => {
-    return {
-        type: REMOVE_INGREDIENT,
-        index: index
-    }
-}
-
-const moveIngredient = (lastIndex: number, newIndex: number) => {
-    return {
-        type: MOVE_INGREDINET,
-        lastIndex: lastIndex,
-        newIndex: newIndex
-    }
-}
-
-export {
+import {
     ADD_INGREDIENT,
     REMOVE_INGREDIENT,
-    MOVE_INGREDINET,
+    MOVE_INGREDINET
+} from '../constants/cart';
 
-    addIngredient,
-    removeIngredient,
-    moveIngredient
-};
+export interface IaddIngredient {
+    readonly type: typeof ADD_INGREDIENT;
+    readonly ingredient:  Ingredient;
+}
+export interface IremoveIngredient {
+    readonly type: typeof REMOVE_INGREDIENT;
+    readonly index: number;
+}
+export interface ImoveIngredient {
+    readonly type: typeof MOVE_INGREDINET;
+    readonly lastIndex: number;
+    readonly newIndex: number;
+}
+export type TcartActions = IaddIngredient
+| IremoveIngredient
+| ImoveIngredient;
+
+export const addIngredient = (ingredient: Ingredient): IaddIngredient => ({
+    type: ADD_INGREDIENT,
+    ingredient: ingredient
+});
+export const removeIngredient = (index: number): IremoveIngredient => ({
+    type: REMOVE_INGREDIENT,
+    index: index
+});
+export const moveIngredient = (lastIndex: number, newIndex: number): ImoveIngredient => ({
+    type: MOVE_INGREDINET,
+    lastIndex: lastIndex,
+    newIndex: newIndex
+});

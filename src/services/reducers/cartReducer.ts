@@ -1,6 +1,7 @@
+import { TcartActions } from './../actions/cartActions';
 import CartIngredient from '../../model/cartIngredient';
 import { Ingredient } from '../../model/ingredient';
-import { ADD_INGREDIENT, MOVE_INGREDINET, REMOVE_INGREDIENT } from "../actions/cartActions";
+import { ADD_INGREDIENT, MOVE_INGREDINET, REMOVE_INGREDIENT } from "../constants/cart";
 import { v4 as uuidv4 } from 'uuid';
 
 interface InitialStateCart  {
@@ -12,7 +13,7 @@ const initialState: InitialStateCart = {
   totalPrice: 0
 };
 
-const cartReducer = (state: InitialStateCart = initialState, action: any): any => {
+const cartReducer = (state: InitialStateCart = initialState, action: TcartActions): InitialStateCart => {
   switch (action.type) {
     case ADD_INGREDIENT: {
       // todo: refactor

@@ -35,8 +35,8 @@ const Modal: FC<IModalPropType> = ({onClose, title, children, isOpen, type} ) =>
   return ReactDOM.createPortal (
     <>
       {/* todo: refactor */}
-      <div className={styles.modal +' ' + (type ==='order' ? styles.modalOrder : styles.modalIngredient) + ' ' + ( isOpen === true ? styles.isOpen : '')}>
-        <div className={styles.modalHeader + ' text text_type_main-large'}>
+      <div className={styles.modal +' ' + (type ==='order' ?  styles.modalOrder : (type === 'feedOrder' ? styles.modalFeedOrder :  styles.modalIngredient)) + ' ' + ( isOpen === true ? styles.isOpen : '')}>
+        <div className={styles.modalHeader + (type === 'feedOrder' ? ' text text_type_digits-default' :' text text_type_main-large')}>
           <CloseIcon onClick={onClose} type="primary" />
           {title}
         </div>

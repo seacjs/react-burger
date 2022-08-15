@@ -1,8 +1,9 @@
+import { TorderActions, TOrderItemInfo } from './../actions/orderActions';
 import { Order } from './../../model/order';
-import { CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, CREATE_ORDER_FAILED, ORDER_OPEN, ORDER_CLOSE } from '../actions/orderActions';
+import { CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, CREATE_ORDER_FAILED, ORDER_OPEN, ORDER_CLOSE } from '../constants/order';
 
 interface initialStateOrder {
-  order: Order | null,
+  order: TOrderItemInfo | null,
   orderRequest: boolean,
   orderFailed: boolean,
   isOpen: boolean
@@ -15,7 +16,7 @@ const initialState: initialStateOrder = {
   isOpen: false
 }
 
-const orderReducer = (state: initialStateOrder = initialState, action: any): any => {
+const orderReducer = (state: initialStateOrder = initialState, action: TorderActions): initialStateOrder => {
   switch (action.type) {
     case CREATE_ORDER_REQUEST: {
       return {

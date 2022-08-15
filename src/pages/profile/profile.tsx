@@ -1,46 +1,64 @@
 import { Button, Input, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { FC, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { PagePropsType } from '../../model/page-props-type';
 import { getLogout, getUpdate } from '../../services/actions/authAction';
 import styles from './profile.module.css';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from '../../hooks/hooks';
+
+type PagePropsType = {
+    pageTitle?: string;
+}
 
 const Profile: FC<PagePropsType> = () => {
-    const {user} = useSelector((store: any) => store.auth);
+
+    const TAB_PROFILE: string = 'profile';
+    const TAB_ORDERS: string = 'orders';
+
+    const [current, setCurrent] = useState(TAB_PROFILE);
+    const navigate = useNavigate();
+    // user data
+    const {user} = useSelector(store => store.auth);
     const dispatch = useDispatch();
     const logout = () => {
         dispatch(getLogout());
     }
-
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setЗassword] = useState<string>('');
-
     useEffect(() => {
-        setName(user?.name);
-        setEmail(user?.email);
+        if(user) {
+            setName(user.name);
+            setEmail(user.email);
+        }
         setЗassword('');
     },[user])
-
     const update = () => {
-        dispatch(getUpdate(name, email, password));
+        if(name && email && password) {
+            dispatch(getUpdate(name, email, password));
+        }
     } 
     const cancel = () => {
-        setName(user?.name);
-        setEmail(user?.email);
+        if(user) {
+            setName(user.name);
+            setEmail(user.email);
+        }
         setЗassword('');
     } 
 
-    const setCurrent = () => {} 
+    useEffect(() => {
+        if (current === TAB_ORDERS) {
+            navigate('/profile/orders');
+        }
+    },[current]);
 
     return (
         <>
             <div className={styles.profileContent + ' pl-5 pt-30'}>
                 <div className={styles.links}>
-                    <Tab value="one" active={ true} onClick={setCurrent}>
+                    <Tab value={TAB_PROFILE} active={true} onClick={setCurrent}>
                         Профилоь
                     </Tab>
-                    <Tab value="two" active={false} onClick={setCurrent}>
+                    <Tab value={TAB_ORDERS} active={false} onClick={setCurrent}>
                         История заказов
                     </Tab>
                     <Tab value="three" active={false} onClick={logout}>
@@ -90,10 +108,10 @@ const Profile: FC<PagePropsType> = () => {
                         </div>
                     ) : ''
                 }
-
-
                 </div>
+ 
             </div>
+        
 
         </>
     );

@@ -1,5 +1,6 @@
 import { Ingredient } from './../../model/ingredient';
-import { CLOSE_DETAIL, OPEN_DETAIL } from '../actions/ingredientDetailAction';
+import { CLOSE_DETAIL, OPEN_DETAIL } from '../constants/ingredientsDetail';
+import { TdetailIngredient } from '../actions/ingredientDetailAction';
 
 interface initialStateDetail {
   isOpen: boolean,
@@ -11,7 +12,7 @@ const initialState: initialStateDetail = {
   ingredient: null
 }
 
-const ingredientDetailReducer = (state: initialStateDetail = initialState, action: any): any => {
+const ingredientDetailReducer = (state: initialStateDetail = initialState, action: TdetailIngredient): initialStateDetail => {
   switch (action.type) {
     case OPEN_DETAIL: {
       return {

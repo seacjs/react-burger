@@ -1,12 +1,12 @@
 import React, { FC, useEffect } from "react";
 import {Counter, CurrencyIcon}  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './ingredient-element.module.css';
-import { useDispatch, useSelector } from "react-redux";
 import { showIngredient } from "../../../services/actions/ingredientDetailAction";
 import { useDrag } from "react-dnd";
 import { Ingredient } from "../../../model/ingredient";
 import CartIngredient from "../../../model/cartIngredient";
 import { useLocation, useNavigate } from "react-router-dom";
+import {useDispatch, useSelector } from "../../../hooks/hooks";
 
 interface propType  {
   ingridient: Ingredient
@@ -16,7 +16,7 @@ const IngredientElement: FC<propType> = ({ingridient} ) => {
 
   const { image, price, name, calories, proteins, fat, carbohydrates} = ingridient;
 
-  const cart = useSelector((store: any) => store.cart);
+  const cart = useSelector(store => store.cart);
   const navigate = useNavigate();
   const location = useLocation();
   let stateLcation = location.state as { backgroundLocation?: Location, from: any, ingridientId: any };

@@ -3,30 +3,33 @@ import {ConstructorElement, DragIcon, Button, CurrencyIcon}  from '@ya.praktikum
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from './../order-details/order-details';
-import { useSelector, useDispatch } from "react-redux";
-import { getCreateOrder, ORDER_CLOSE } from "../../services/actions/orderActions";
+import { useSelector, useDispatch } from '../../hooks/hooks';
+import { getCreateOrder } from "../../services/actions/orderActions";
 import { useDrop } from "react-dnd";
 import { addIngredient, moveIngredient, removeIngredient } from "../../services/actions/cartActions";
 import Card from "./card";
 import CartIngredient from "../../model/cartIngredient";
 import { useNavigate } from "react-router-dom";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import { CLOSE_DETAIL } from "../../services/actions/ingredientDetailAction";
+import { CLOSE_DETAIL } from "../../services/constants/ingredientsDetail";
+import { ORDER_CLOSE } from "../../services/constants/order";
+import { hideIngredient } from "../../services/actions/ingredientDetailAction";
+import { Ingredient } from "../../model/ingredient";
 
 const BurgerConstructor: FC = () => {
 
-  const cartData = useSelector((store: any) => store.cart);
-  const order = useSelector((store: any) => store.order);
+  const cartData = useSelector(store => store.cart);
+  const order = useSelector(store => store.order);
   const ingredientData = cartData.items;
   const bunIngredient = ingredientData.find((item: CartIngredient) => item.ingredient.type === 'bun')?.ingredient;
   const centerIngredinets = ingredientData.filter((item: CartIngredient)=> item.ingredient.type !== 'bun');
-  const {islogged} = useSelector((store: any) => { return store.auth});
+  const {isLogged} = useSelector(store => store.auth);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const openOrder = () => {
-    if(!islogged) {
+    if(!isLogged) {
       navigate('/login');
     }
     let ingredientsIds: string[] = [];
@@ -44,8 +47,8 @@ const BurgerConstructor: FC = () => {
     collect: monitor => ({
       isHover: monitor.isOver()
     }),
-    drop(ingredient: any) {
-      dispatch(addIngredient(ingredient));
+    drop(ingredient) {
+      dispatch(addIngredient(ingredient as Ingredient));
     },
   });
   const removeItem = (index: number) => {
@@ -56,9 +59,9 @@ const BurgerConstructor: FC = () => {
     dispatch(moveIngredient(dragIndex, hoverIndex));
   }, [dispatch]);
 
-  const ingredientDetail = useSelector((store: any) => store.ingredientDetail);
+  const ingredientDetail = useSelector(store => store.ingredientDetail);
   const closeDetail = () => {
-    dispatch({type: CLOSE_DETAIL});
+    dispatch(hideIngredient());
     navigate('/');
   }
 
